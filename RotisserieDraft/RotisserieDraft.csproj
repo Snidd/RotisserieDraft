@@ -68,9 +68,12 @@
   <ItemGroup>
     <Compile Include="Controllers\DraftController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Domain\ICardRepository.cs" />
     <Compile Include="Domain\IDraftMemberPositionsRepository.cs" />
     <Compile Include="Domain\IDraftRepository.cs" />
+    <Compile Include="Domain\IMagicColorsRepository.cs" />
     <Compile Include="Domain\IMemberRepository.cs" />
+    <Compile Include="Domain\IPickRepository.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

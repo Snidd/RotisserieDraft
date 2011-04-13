@@ -1,0 +1,12 @@
+c:\users\mkj\documents\visual studio 2010\Projects\RotisserieDraft\RotisserieDraft\bin\RotisserieDraft.dll
+c:\users\mkj\documents\visual studio 2010\Projects\RotisserieDraft\RotisserieDraft\bin\RotisserieDraft.pdb
+c:\users\mkj\documents\visual studio 2010\Projects\RotisserieDraft\RotisserieDraft\obj\Debug\ResolveAssemblyReference.cache
+c:\users\mkj\documents\visual studio 2010\Projects\RotisserieDraft\RotisserieDraft\obj\Debug\RotisserieDraft.dll
+c:\users\mkj\documents\visual studio 2010\Projects\RotisserieDraft\RotisserieDraft\obj\Debug\RotisserieDraft.pdb
+c:\users\mkj\documents\visual studio 2010\Projects\RotisserieDraft\RotisserieDraft\bin\App_Data\draftdb.sdf
+c:\users\mkj\documents\visual studio 2010\Projects\RotisserieDraft\RotisserieDraft\bin\Iesi.Collections.dll
+c:\users\mkj\documents\visual studio 2010\Projects\RotisserieDraft\RotisserieDraft\bin\NHibernate.dll
+c:\users\mkj\documents\visual studio 2010\Projects\RotisserieDraft\RotisserieDraft\bin\Iesi.Collections.xml
+c:\users\mkj\documents\visual studio 2010\Projects\RotisserieDraft\RotisserieDraft\bin\NHibernate.xml
+C:\Users\mkj\documents\visual studio 2010\Projects\RotisserieDraft\RotisserieDraft\bin\hibernate.cfg.xml
+C:\Users\mkj\documents\visual studio 2010\Projects\RotisserieDraft\RotisserieDraft\bin\Mappings\Draft.hbm.xml

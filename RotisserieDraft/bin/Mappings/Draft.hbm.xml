@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="RotisserieDraft"
+                   namespace="RotisserieDraft.Models">
+
+  <!-- more mapping info here -->
+  <class name="Draft">
+
+    <id name="Id" column="DraftId" type="Int32">
+      <generator class="native"></generator>
+    </id>
+    
+    <property name="Name" type="String" />
+    <property name="CreatedDate" type="DateTime" />
+    <property name="Public" type="System.Boolean" />
+
+    <bag name="MemberPositions" table="DraftMemberPositions" cascade="all">
+      <key column="DraftId"/>
+      <one-to-many 
+         class="DraftMemberPositions, NHibernateOneToMany"/>
+    </bag>
+    
+  </class>
+
+  <class name="DraftMemberPositions">
+    <id name="Id" column="DraftMemberPositionsId">
+      <generator class="native"></generator>
+    </id>
+
+    <property name="Position" type="Int32"/>
+    
+    <many-to-one name="Member" column="MemberId" unique-key="test1"/>
+    <many-to-one name="Draft" column="DraftId" unique-key="test1"/>
+    
+  </class>
+
+  <class name="Member">
+    <id name="Id" column="MemberId" type="Int32">
+      <generator class="native"></generator>
+    </id>
+    
+    <property name="FullName" type="String"/>
+    <property name="Password" type="String"/>
+    <property name="Email" type="String" unique="true"/>
+
+    <bag name="DraftPositions" table="DraftMemberPositions" cascade="all">
+      <key column="MemberId"/>
+      <one-to-many
+         class="DraftMemberPositions, NHibernateOneToMany"/>
+    </bag>
+    
+  </class>
+
+
+
+</hibernate-mapping>

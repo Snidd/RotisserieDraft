@@ -18,5 +18,10 @@ namespace RotisserieDraft.Models
 		
 		public virtual string Name { get; set; }
 		public virtual string Type { get; set; }
+		public virtual string CastingCost { get; set; }
+		public virtual string PowerToughness { get; set; }
+		public virtual string Text { get; set; }
+
+		public virtual IList<MagicColors> Colors { get; set; }
 	}
 }

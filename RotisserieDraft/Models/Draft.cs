@@ -19,6 +19,8 @@ namespace RotisserieDraft.Models
 		public virtual DateTime? CreatedDate { get; set; }
 		public virtual string Name { get; set; }
 		public virtual bool Public { get; set; }
+		public virtual int MaximumPicks { get; set; }
+		public virtual Member Owner { get; set; }
 
 		public virtual IList<DraftMemberPositions> MemberPositions { get; set; }
 	}

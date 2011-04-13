@@ -10,7 +10,7 @@ using RotisserieDraft.Models;
 namespace RotisserieDraft.Tests.Tests
 {
 	[TestClass]
-	public class GenerateSchema_Fixture
+	public class GenerateSchemaTests
 	{
 		[TestMethod]
 		public void CanGenerateSchema()

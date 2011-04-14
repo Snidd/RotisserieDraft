@@ -5,12 +5,9 @@ using System.Web;
 
 namespace RotisserieDraft.Models
 {
-	using System;
-	using System.Collections.Generic;
-
-	public partial class Pick
+	public partial class FuturePick
 	{
-		public Pick()
+		public FuturePick()
 		{
 		}
 
@@ -20,6 +17,5 @@ namespace RotisserieDraft.Models
 		public virtual Card Card { get; set; }
 		public virtual Draft Draft { get; set; }
 		public virtual Member Member { get; set; }
-		
 	}
 }

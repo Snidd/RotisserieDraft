@@ -83,7 +83,7 @@ namespace RotisserieDraft.Tests.Domain
 				Assert.AreEqual(draft.Name, fromDb.Name);
 				Assert.AreEqual(draft.Public, fromDb.Public);
 
-				Assert.AreEqual(draft.CreatedDate.GetValueOrDefault().ToString(), fromDb.CreatedDate.GetValueOrDefault().ToString());
+				Assert.AreEqual(draft.CreatedDate.ToString(), fromDb.CreatedDate.ToString());
 			}
 		}
 

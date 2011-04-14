@@ -93,6 +93,35 @@ namespace RotisserieDraft.Tests.Domain
 		}
 
 		[TestMethod]
+		public void CanAddPlayersToDraft()
+		{
+			IDraftMemberPositionsRepository repository = new DraftMemberPositionsRepository();
+
+			Draft draft1 = _drafts[1];
+			Member member1 = _members[0];
+			Member member2 = _members[1];
+			Member member3 = _members[2];
+			Member member4 = _members[3];
+
+			repository.AddMemberToDraft(draft1, member1, 4);
+			repository.AddMemberToDraft(draft1, member2, 3);
+			repository.AddMemberToDraft(draft1, member3, 2);
+			repository.AddMemberToDraft(draft1, member4, 1);
+
+			int positionFromDb = repository.GetDraftPosition(draft1, member1);
+			Assert.AreEqual(4, positionFromDb);
+
+			positionFromDb = repository.GetDraftPosition(draft1, member2);
+			Assert.AreEqual(3, positionFromDb);
+
+			positionFromDb = repository.GetDraftPosition(draft1, member3);
+			Assert.AreEqual(2, positionFromDb);
+
+			positionFromDb = repository.GetDraftPosition(draft1, member4);
+			Assert.AreEqual(1, positionFromDb);
+
+		}
+		[TestMethod]
 		public void CanUpdatePlayerPosition()
 		{
 			IDraftMemberPositionsRepository repository = new DraftMemberPositionsRepository();
@@ -101,6 +130,14 @@ namespace RotisserieDraft.Tests.Domain
 			int positionFromDb = repository.GetDraftPosition(_drafts[0], _members[1]);
 
 			Assert.AreEqual(5, positionFromDb);
+		}
+
+		[TestMethod]
+		public void CanGetPlayerFromPosition()
+		{
+			IDraftMemberPositionsRepository repository = new DraftMemberPositionsRepository();
+			var pos = repository.GetDraftMemberPositionByDraftAndPosition(_drafts[0], 3);
+			Assert.AreEqual(_members[2].Id, pos.Id);
 		}
 
 		[TestMethod]

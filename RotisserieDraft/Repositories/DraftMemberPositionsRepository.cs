@@ -70,9 +70,26 @@ namespace RotisserieDraft.Repositories
 			}
 		}
 
+		public DraftMemberPositions GetDraftMemberPositionByDraftAndPosition(Draft draft, int draftPosition)
+		{
+			using (ISession session = NHibernateHelper.OpenSession())
+			{
+				var draftMemberPositions = session
+					.CreateCriteria(typeof (DraftMemberPositions))
+					.Add(Restrictions.Eq("Draft", draft))
+					.Add(Restrictions.Eq("Position", draftPosition))
+					.UniqueResult<DraftMemberPositions>();
+
+				return draftMemberPositions;
+			}
+		}
+
 		public int GetDraftPosition(Draft draft, Member member)
 		{
 			var draftMemberPositions = GetDraftMemberPositionByDraftMember(draft, member);
+			if (draftMemberPositions == null)
+				return -1;
+
 			return draftMemberPositions.Position;
 		}
 

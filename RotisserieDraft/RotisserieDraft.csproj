@@ -71,16 +71,19 @@
     <Compile Include="Domain\ICardRepository.cs" />
     <Compile Include="Domain\IDraftMemberPositionsRepository.cs" />
     <Compile Include="Domain\IDraftRepository.cs" />
+    <Compile Include="Domain\IFuturePickRepository.cs" />
     <Compile Include="Domain\IMagicColorsRepository.cs" />
     <Compile Include="Domain\IMemberRepository.cs" />
     <Compile Include="Domain\IPickRepository.cs" />
+    <Compile Include="DraftLogic\IDraftLogic.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="DraftLogic\ModifiedRotisserieDraftLogic.cs" />
     <Compile Include="Models\Card.cs" />
     <Compile Include="Models\Draft.cs" />
     <Compile Include="Models\DraftMemberPositions.cs" />
+    <Compile Include="Models\FuturePick.cs" />
     <Compile Include="Models\MagicColor.cs" />
     <Compile Include="Models\Member.cs" />
     <Compile Include="Models\Pick.cs" />
@@ -88,6 +91,7 @@
     <Compile Include="Repositories\CardRepository.cs" />
     <Compile Include="Repositories\DraftMemberPositionsRepository.cs" />
     <Compile Include="Repositories\DraftRepository.cs" />
+    <Compile Include="Repositories\FuturePickRepository.cs" />
     <Compile Include="Repositories\MagicColorsRepository.cs" />
     <Compile Include="Repositories\MemberRepository.cs" />
     <Compile Include="Repositories\NHibernateHelper.cs" />

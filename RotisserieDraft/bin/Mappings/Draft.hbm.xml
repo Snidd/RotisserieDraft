@@ -9,9 +9,13 @@
       <generator class="native"></generator>
     </id>    
     <property name="Name" type="String" />
-    <property name="CreatedDate" type="DateTime" />
+    <property name="CreatedDate" type="DateTime" not-null="true" />
     <property name="Public" type="System.Boolean" />
-    <property name="MaximumPicks" type="Int32"/>
+    <property name="MaximumPicksPerMember" type="Int32"/>
+    <property name="StartPosition" type="Int32"/>
+    <property name="DraftSize" type="Int32"/>
+    <property name="Clockwise" type="System.Boolean"/>
+    <many-to-one name="CurrentTurn" class="Member,NHibernateOneToOne" column="CurrentMemberId"/>
     <many-to-one name="Owner" class="Member,NHibernateOneToOne" column="OwnerId"/>
     <bag name="MemberPositions" table="DraftMemberPositions" cascade="all">
       <key column="DraftId"/>
@@ -72,9 +76,20 @@
     <id name="Id" column="PickId" type="Int32">
       <generator class="native"></generator>
     </id>
+    <property name="CreatedDate" type="DateTime" not-null="true" />
     <many-to-one name="Member" column="MemberId" />
     <many-to-one name="Draft" column="DraftId" unique-key="DraftCardUnique"/>
     <many-to-one name="Card" column="CardId" unique-key="DraftCardUnique"/>
+  </class>
+
+  <class name="FuturePick">
+    <id name="Id" column="FuturePickId" type="Int32">
+      <generator class="native"></generator>
+    </id>
+    <property name="CreatedDate" type="DateTime" not-null="true" />
+    <many-to-one name="Member" column="MemberId" unique-key="FuturePickUnique"/>
+    <many-to-one name="Draft" column="DraftId" unique-key="FuturePickUnique"/>
+    <many-to-one name="Card" column="CardId" unique-key="FuturePickUnique"/>
   </class>
 
 </hibernate-mapping>

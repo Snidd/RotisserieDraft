@@ -14,6 +14,8 @@ namespace RotisserieDraft.Repositories
 	{
 		public void Add(Draft draft)
 		{
+			draft.CreatedDate = DateTime.Now;
+
 			using (ISession session = NHibernateHelper.OpenSession())
 			using (ITransaction transaction = session.BeginTransaction())
 			{

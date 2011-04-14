@@ -14,6 +14,7 @@ namespace RotisserieDraft.Domain
 		
 		DraftMemberPositions GetDraftMemberPositionById(int draftMemberPositionsId);
 		DraftMemberPositions GetDraftMemberPositionByDraftMember(Draft draft, Member member);
+		DraftMemberPositions GetDraftMemberPositionByDraftAndPosition(Draft draft, int draftPosition);
 		int GetDraftPosition(Draft draft, Member member);
 
 		ICollection<DraftMemberPositions> GetDraftPositionsByMember(Member member);

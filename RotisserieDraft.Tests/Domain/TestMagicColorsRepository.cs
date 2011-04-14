@@ -18,6 +18,7 @@ namespace RotisserieDraft.Tests.Domain
 		                {
 		                    new MagicColor {Name = "Red", ShortName = "R"},
 							new MagicColor {Name = "Blue", ShortName = "U"},
+							new MagicColor {Name = "Black", ShortName = "B"},
 		                };
 
 

@@ -83,6 +83,20 @@ namespace RotisserieDraft.DraftLogic
 			return true;
 		}
 
+        public static int NextPos(int nrOfPicks = 0, int draftSize = 8)
+        {
+            int finishedRounds = nrOfPicks / (draftSize * 2);
+            int posInRound = nrOfPicks % (draftSize * 2);
+            if (posInRound < draftSize)
+	        {
+                return ((finishedRounds + posInRound) % draftSize) + 1;
+	        }
+	        else
+	        {
+                return (finishedRounds + (draftSize * 2 - 1 - posInRound)) % draftSize + 1;
+	        }
+        }
+
 		private void TryFuturePick(Draft draft)
 		{
 			IFuturePickRepository fpr = new FuturePickRepository();

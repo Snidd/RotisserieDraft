@@ -61,6 +61,7 @@
     <Compile Include="Domain\TestMagicColorsRepository.cs" />
     <Compile Include="Domain\TestMemberRepository.cs" />
     <Compile Include="Domain\TestPickRepository.cs" />
+    <Compile Include="DraftLogic\TestDraftPosition.cs" />
     <Compile Include="DraftLogic\TestModifiedRotisserieDraftLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />

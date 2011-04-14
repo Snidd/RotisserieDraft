@@ -55,8 +55,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\TestCardRepository.cs" />
     <Compile Include="Domain\TestDraftMemberPositionsRepository.cs" />
+    <Compile Include="Domain\TestMagicColorsRepository.cs" />
     <Compile Include="Domain\TestMemberRepository.cs" />
+    <Compile Include="Domain\TestPickRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
     <Compile Include="Tests\GenerateSchemaTests.cs" />

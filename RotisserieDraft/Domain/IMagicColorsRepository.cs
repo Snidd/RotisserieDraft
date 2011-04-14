@@ -8,9 +8,9 @@ namespace RotisserieDraft.Domain
 {
 	public interface IMagicColorsRepository
 	{
-		void Add(MagicColors magiccolor);
-		void Update(MagicColors magiccolor);
-		void Remove(MagicColors magiccolor);
-		MagicColors GetById(int magicColorId);
+		void Add(MagicColor magiccolor);
+		void Update(MagicColor magiccolor);
+		void Remove(MagicColor magiccolor);
+		MagicColor GetById(int magicColorId);
 	}
 }

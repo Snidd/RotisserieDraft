@@ -81,14 +81,17 @@
     <Compile Include="Models\Card.cs" />
     <Compile Include="Models\Draft.cs" />
     <Compile Include="Models\DraftMemberPositions.cs" />
-    <Compile Include="Models\MagicColors.cs" />
+    <Compile Include="Models\MagicColor.cs" />
     <Compile Include="Models\Member.cs" />
     <Compile Include="Models\Pick.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\CardRepository.cs" />
     <Compile Include="Repositories\DraftMemberPositionsRepository.cs" />
     <Compile Include="Repositories\DraftRepository.cs" />
+    <Compile Include="Repositories\MagicColorsRepository.cs" />
     <Compile Include="Repositories\MemberRepository.cs" />
     <Compile Include="Repositories\NHibernateHelper.cs" />
+    <Compile Include="Repositories\PickRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\draftdb.sdf">

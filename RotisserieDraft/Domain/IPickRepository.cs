@@ -8,9 +8,11 @@ namespace RotisserieDraft.Domain
 {
 	public interface IPickRepository
 	{
-		void PickCard(Draft draft, Member member, Card card);
+		Pick PickCard(Draft draft, Member member, Card card);
 		void RemovePick(Draft draft, Member member, Card card);
-		void RemovePick(int pickId);
+		void RemovePick(Pick pick);
+
+		Pick GetPick(Draft draft, Member member, Card card);
 
 		ICollection<Pick> GetPicksByDraft(Draft draft);
 		ICollection<Pick> GetPicksByDraftAndMember(Draft draft, Member member);

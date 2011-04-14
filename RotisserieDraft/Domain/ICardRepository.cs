@@ -16,6 +16,6 @@ namespace RotisserieDraft.Domain
 		Card GetByName(string name);
 
 		Card FindCard(string searchtext);
-		Card FindCard(string searchtext, ICollection<MagicColors> colors);
+		Card FindCard(string searchtext, ICollection<MagicColor> colors);
 	}
 }

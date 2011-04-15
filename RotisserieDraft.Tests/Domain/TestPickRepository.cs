@@ -12,7 +12,7 @@ using RotisserieDraft.Repositories;
 
 namespace RotisserieDraft.Tests.Domain
 {
-	[TestClass]
+    [TestClass, DeploymentItem(@".\hibernate.cfg.xml")]
 	public class TestPickRepository
 	{
 		private static ISessionFactory _sessionFactory;
@@ -29,9 +29,9 @@ namespace RotisserieDraft.Tests.Domain
 
 		private static readonly Card[] _cards = new[]
 						{
-							new Card(_colors[3]) {CastingCost = "2U", Name = "Thirst for Knowledge", Type = "Instant" },
-							new Card(_colors[0], _colors[1]) {CastingCost = "1RG", Name = "Fires of Yavimaya", Type = "Enchantment" },
-							new Card(_colors[4]) {CastingCost = "BBB", Name = "Necropotence", Type = "Enchantment" },
+							new Card {CastingCost = "2U", Name = "Thirst for Knowledge", Type = "Instant" },
+							new Card {CastingCost = "1RG", Name = "Fires of Yavimaya", Type = "Enchantment" },
+							new Card {CastingCost = "BBB", Name = "Necropotence", Type = "Enchantment" },
 						};
 
 		private readonly Draft[] _drafts = new[]

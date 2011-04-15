@@ -8,7 +8,7 @@ using RotisserieDraft.Repositories;
 
 namespace RotisserieDraft.Tests.Domain
 {
-	[TestClass]
+    [TestClass, DeploymentItem(@".\hibernate.cfg.xml")]
 	public class TestMagicColorsRepository
 	{
 		private static ISessionFactory _sessionFactory;

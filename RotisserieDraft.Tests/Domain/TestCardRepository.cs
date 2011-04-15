@@ -8,7 +8,7 @@ using RotisserieDraft.Repositories;
 
 namespace RotisserieDraft.Tests.Domain
 {
-	[TestClass]
+    [TestClass, DeploymentItem(@".\hibernate.cfg.xml")]
 	public class TestCardRepository
 	{
 		private static ISessionFactory _sessionFactory;
@@ -56,8 +56,8 @@ namespace RotisserieDraft.Tests.Domain
 
 			_cards = new[]
 						{
-							new Card(_colors[3]) {CastingCost = "2U", Name = "Thirst for Knowledge", Type = "Instant" },
-							new Card(_colors[0], _colors[1]) {CastingCost = "1RG", Name = "Fires of Yavimaya", Type = "Enchantment" },
+							new Card {CastingCost = "2U", Name = "Thirst for Knowledge", Type = "Instant" },
+							new Card {CastingCost = "1RG", Name = "Fires of Yavimaya", Type = "Enchantment" },
 						};
 
 			using (var session = _sessionFactory.OpenSession())
@@ -73,7 +73,7 @@ namespace RotisserieDraft.Tests.Domain
 		[TestMethod]
 		public void CanAddCard()
 		{
-			var card = new Card(_colors[2]) {Name = "White Knight", CastingCost = "WW", Type = "Creature - Knight"};
+			var card = new Card {Name = "White Knight", CastingCost = "WW", Type = "Creature - Knight"};
 
 			ICardRepository repository = new CardRepository();
 			repository.Add(card);
@@ -89,11 +89,6 @@ namespace RotisserieDraft.Tests.Domain
 				Assert.AreEqual(card.Name, fromDb.Name);
 				Assert.AreEqual(card.CastingCost, fromDb.CastingCost);
 				Assert.AreEqual(card.Type, fromDb.Type);
-
-				Assert.IsNotNull(fromDb.Colors);
-				Assert.AreEqual(1, fromDb.Colors.Count);
-
-				Assert.AreEqual(_colors[2].Name, fromDb.Colors[0].Name);
 			}
 		}
 

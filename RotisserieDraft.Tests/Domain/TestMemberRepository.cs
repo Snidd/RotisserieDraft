@@ -12,7 +12,7 @@ using RotisserieDraft.Repositories;
 
 namespace RotisserieDraft.Tests.Domain
 {
-	[TestClass]
+    [TestClass, DeploymentItem(@".\hibernate.cfg.xml")]
 	public class TestMemberRepository
 	{
 		private static ISessionFactory _sessionFactory;

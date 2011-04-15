@@ -10,7 +10,7 @@ using RotisserieDraft.Repositories;
 
 namespace RotisserieDraft.Tests.Domain
 {
-	[TestClass]
+    [TestClass, DeploymentItem(@".\hibernate.cfg.xml")]
 	public class TestDraftRepository
 	{
 		private static ISessionFactory _sessionFactory;
@@ -67,13 +67,20 @@ namespace RotisserieDraft.Tests.Domain
 		[TestMethod]
 		public void CanAddNewDraft()
 		{
-			var draft = new Draft {CreatedDate = DateTime.Now, Name = "TestNewDraft", Public = true};
+		    var draft = new Draft
+		                    {
+		                        Name = "TestName",
+		                        CreatedDate = DateTime.Now,
+		                        MaximumPicksPerMember = 75,
+                                Owner = _members[0],
+            };
+
 			IDraftRepository repository = new DraftRepository();
 			repository.Add(draft);
 
 
 			// use session to try to load the product
-			using (ISession session = _sessionFactory.OpenSession())
+			using (var session = _sessionFactory.OpenSession())
 			{
 				var fromDb = session.Get<Draft>(draft.Id);
 				// Test that the product was successfully inserted
@@ -82,10 +89,48 @@ namespace RotisserieDraft.Tests.Domain
 				Assert.AreNotSame(draft, fromDb);
 				Assert.AreEqual(draft.Name, fromDb.Name);
 				Assert.AreEqual(draft.Public, fromDb.Public);
+                Assert.AreEqual(draft.Id, fromDb.Id);
+                Assert.AreEqual(draft.Owner.Id, fromDb.Owner.Id);
+                Assert.AreEqual(draft.MaximumPicksPerMember, fromDb.MaximumPicksPerMember);
 
 				Assert.AreEqual(draft.CreatedDate.ToString(), fromDb.CreatedDate.ToString());
 			}
 		}
+
+        [TestMethod]
+        public void CanAddNewDraftAndUpdateItWithOwner()
+        {
+            var draft = new Draft
+            {
+                Name = "TestName",
+                CreatedDate = DateTime.Now,
+                MaximumPicksPerMember = 75,
+            };
+
+            IDraftRepository repository = new DraftRepository();
+            repository.Add(draft);
+
+            draft.Owner = _members[0];
+
+            repository.Update(draft);
+
+            // use session to try to load the product);
+            using (var session = _sessionFactory.OpenSession())
+            {
+                var fromDb = session.Get<Draft>(draft.Id);
+                // Test that the product was successfully inserted
+
+                Assert.IsNotNull(fromDb);
+                Assert.AreNotSame(draft, fromDb);
+                Assert.AreEqual(draft.Name, fromDb.Name);
+                Assert.AreEqual(draft.Public, fromDb.Public);
+                Assert.AreEqual(draft.Id, fromDb.Id);
+                Assert.AreEqual(draft.Owner.Id, fromDb.Owner.Id);
+                Assert.AreEqual(draft.MaximumPicksPerMember, fromDb.MaximumPicksPerMember);
+
+                Assert.AreEqual(draft.CreatedDate.ToString(), fromDb.CreatedDate.ToString());
+            }
+        }
 
 		[TestMethod]
 		public void CanUpdateExistingDraft()

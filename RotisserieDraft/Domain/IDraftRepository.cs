@@ -13,6 +13,7 @@ namespace RotisserieDraft.Domain
 		void Remove(Draft draft);
 		Draft GetById(int draftId);
 		ICollection<Draft> GetByName(string name);
+	    ICollection<Draft> List();
 
 	}
 }

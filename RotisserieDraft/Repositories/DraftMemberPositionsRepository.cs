@@ -113,6 +113,7 @@ namespace RotisserieDraft.Repositories
 				var draftMemberPositions = session
 					.CreateCriteria(typeof(DraftMemberPositions))
 					.Add(Restrictions.Eq("Draft", draft))
+                    .AddOrder(Order.Asc("Position"))
 					.List<DraftMemberPositions>();
 
 				return draftMemberPositions;

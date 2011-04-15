@@ -44,6 +44,17 @@ namespace RotisserieDraft.Repositories
 			}
 		}
 
+        public ICollection<Draft> List()
+        {
+            using (var session = NHibernateHelper.OpenSession())
+            {
+                var drafts = session
+                    .CreateCriteria(typeof(Draft))
+                    .List<Draft>();
+                return drafts;
+            }
+        }
+
 		public Draft GetById(int draftId)
 		{
 			using (ISession session = NHibernateHelper.OpenSession())

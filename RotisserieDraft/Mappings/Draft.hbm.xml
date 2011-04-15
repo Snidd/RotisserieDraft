@@ -16,7 +16,7 @@
     <property name="DraftSize" type="Int32"/>
     <property name="Clockwise" type="System.Boolean"/>
     <many-to-one name="CurrentTurn" class="Member,NHibernateOneToOne" column="CurrentMemberId"/>
-    <many-to-one name="Owner" class="Member,NHibernateOneToOne" column="OwnerId"/>
+    <many-to-one name="Owner" class="Member,NHibernateOneToOne" column="OwnerId" cascade="all"/>
     <bag name="MemberPositions" table="DraftMemberPositions" cascade="all">
       <key column="DraftId"/>
       <one-to-many 
@@ -56,11 +56,6 @@
     <property name="CastingCost" type="String"/>
     <property name="PowerToughness" type="String"/>
     <property name="Text" type="String"/>
-    <bag name="Colors" table="CardColors" cascade="all">
-      <key column="CardId"/>
-      <one-to-many
-         class="MagicColor, NHibernateOneToMany"/>
-    </bag>
   </class>
 
   <class name="MagicColor">
@@ -79,7 +74,7 @@
     <property name="CreatedDate" type="DateTime" not-null="true" />
     <many-to-one name="Member" column="MemberId" />
     <many-to-one name="Draft" column="DraftId" unique-key="DraftCardUnique"/>
-    <many-to-one name="Card" column="CardId" unique-key="DraftCardUnique"/>
+    <many-to-one name="Card" column="CardId" unique-key="DraftCardUnique" cascade="all"/>
   </class>
 
   <class name="FuturePick">

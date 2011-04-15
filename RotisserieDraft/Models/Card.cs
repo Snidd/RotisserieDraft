@@ -14,15 +14,6 @@ namespace RotisserieDraft.Models
 		{
 		}
 
-		public Card(params MagicColor[] colors)
-		{
-			foreach (var color in colors)
-			{
-				this.Colors = new List<MagicColor>();
-				this.Colors.Add(color);
-			}
-		}
-
 		public virtual int Id { get; set; }
 		
 		public virtual string Name { get; set; }
@@ -30,7 +21,5 @@ namespace RotisserieDraft.Models
 		public virtual string CastingCost { get; set; }
 		public virtual string PowerToughness { get; set; }
 		public virtual string Text { get; set; }
-
-		public virtual IList<MagicColor> Colors { get; set; }
 	}
 }

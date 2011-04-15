@@ -9,7 +9,7 @@ using RotisserieDraft.Models;
 
 namespace RotisserieDraft.Tests.Tests
 {
-	[TestClass]
+	[TestClass, DeploymentItem(@".\hibernate.cfg.xml")]
 	public class GenerateSchemaTests
 	{
 		[TestMethod]

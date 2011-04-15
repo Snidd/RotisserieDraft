@@ -1,0 +1,17 @@
+﻿@model List<RotisserieDraft.ViewModels.DraftListViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<ul id="drafts">
+    @foreach (var d in Model)
+    {
+        <li>@d.Name (Created by @d.CreatorName) @Html.ActionLink("Open", "Details", "Draft", new { id = d.Id }, new { })</li>
+    }
+</ul>
+
+
+

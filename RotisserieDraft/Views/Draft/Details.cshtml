@@ -1,0 +1,32 @@
+﻿@model RotisserieDraft.ViewModels.DraftViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>DraftViewModel</legend>
+
+    <div class="display-label">Name</div>
+    <div class="display-field">@Model.Name</div>
+
+    <div class="display-label">CurrentNumberOfPicks</div>
+    <div class="display-field">@Model.CurrentNumberOfPicks</div>
+
+    <div class="display-label">MaximumNumberOfPicks</div>
+    <div class="display-field">@Model.MaximumNumberOfPicks</div>
+
+    <div class="display-label">NumberOfPlayers</div>
+    <div class="display-field">@Model.Members.Count</div>
+
+    <div class="display-label">Owner</div>
+    <div class="display-field">@Model.Owner</div>
+
+    <div class="display-label">CreationDate</div>
+    <div class="display-field">@String.Format("{0:g}", Model.CreationDate)</div>
+</fieldset>
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>

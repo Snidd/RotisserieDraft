@@ -1,32 +1,66 @@
 ﻿@model RotisserieDraft.ViewModels.DraftViewModel
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = Model.Name;
 }
 
-<h2>Details</h2>
+<script language="ecmascript">
+    function togglePickList(memberId) {
+        $('#DraftMemberPicks-' + memberId).toggle(200);
+    }
+</script>
+
+<h2>@Model.Name</h2>
 
 <fieldset>
-    <legend>DraftViewModel</legend>
-
-    <div class="display-label">Name</div>
-    <div class="display-field">@Model.Name</div>
-
-    <div class="display-label">CurrentNumberOfPicks</div>
-    <div class="display-field">@Model.CurrentNumberOfPicks</div>
-
-    <div class="display-label">MaximumNumberOfPicks</div>
-    <div class="display-field">@Model.MaximumNumberOfPicks</div>
-
-    <div class="display-label">NumberOfPlayers</div>
-    <div class="display-field">@Model.Members.Count</div>
-
-    <div class="display-label">Owner</div>
-    <div class="display-field">@Model.Owner</div>
-
-    <div class="display-label">CreationDate</div>
-    <div class="display-field">@String.Format("{0:g}", Model.CreationDate)</div>
+    <legend>The Draft</legend> 
+    @foreach (var m in Model.Members)
+    {
+        <div class="draftmember-box-@m.DraftPosition.Equals(Model.CurrentPickPosition)" id="DraftMemberBox-@m.Id" onclick="togglePickList(@m.Id)">
+            <p class="draftmember-name">@m.DisplayName</p>
+            <ul class="draftmember-lastpicks" id="DraftMemberPicks-@m.Id">
+            @foreach (var pick in m.LastThreePicks)
+            {
+                <li class="draftmember-lastpicks">@pick</li>
+            }
+            </ul>
+        </div>
+        if (m.DraftPosition.Equals(Model.CurrentWheelPosition))
+        {
+            <hr class="draft-wheelline"/>
+        }
+    }
 </fieldset>
 <p>
     @Html.ActionLink("Back to List", "Index")
 </p>
+<fieldset>
+    <legend>Information</legend>
+
+    <table class="draftinformation">
+        <tr>
+            <td>
+                <div class="display-label">Current amount of picks</div>
+                <div class="display-field">@Model.CurrentWheelPosition</div>
+            </td>
+            <td>
+                <div class="display-label">Maximum amount of picks</div>
+                <div class="display-field">@Model.MaximumNumberOfPicks</div>
+            </td>
+            <td>
+                <div class="display-label">Number of players in draft</div>
+                <div class="display-field">@Model.Members.Count</div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="display-label">Creator</div>
+                <div class="display-field">@Model.Owner</div>
+            </td>
+            <td>
+                <div class="display-label">Created</div>
+                <div class="display-field">@String.Format("{0:g}", Model.CreationDate)</div>
+            </td>
+        </tr>
+    </table>
+</fieldset>

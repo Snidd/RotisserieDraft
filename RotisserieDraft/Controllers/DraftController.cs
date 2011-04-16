@@ -72,7 +72,8 @@ namespace RotisserieDraft.Controllers
                     var draftMemberVm = new DraftMemberVm
                                   {
                                       DisplayName = member.FullName,
-                                      Id = member.Id
+                                      Id = member.Id,
+                                      DraftPosition = draftMemberPositions.Position,
                                   };
 
                     var latestPicks = systemLogic.GetLatestPicksByPlayer(id, draftMemberVm.Id);

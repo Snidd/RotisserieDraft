@@ -15,6 +15,7 @@ namespace RotisserieDraft.ViewModels
         public int Id { get; set; }
         public string DisplayName { get; set; }
         public List<string> LastThreePicks { get; set; }
+        public int DraftPosition { get; set; }
     }
 
     public partial class DraftViewModel

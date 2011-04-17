@@ -62,7 +62,7 @@ namespace RotisserieDraft.Repositories
 				var picks = session
 					.CreateCriteria(typeof(Pick))
 					.Add(Restrictions.Eq("Draft", draft))
-					.AddOrder(Order.Asc("CreatedDate"))
+                    .AddOrder(Order.Asc("Id"))
 					.List<Pick>();
 
 				return picks;

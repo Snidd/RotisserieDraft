@@ -4,7 +4,7 @@
     ViewBag.Title = Model.Name;
 }
 
-<script language="ecmascript">
+<script type="text/ecmascript" language="ecmascript">
     function togglePickList(memberId) {
         $('#DraftMemberPicks-' + memberId).toggle(200);
     }
@@ -12,25 +12,19 @@
 
 <h2>@Model.Name</h2>
 
-<fieldset>
-    <legend>The Draft</legend> 
-    @foreach (var m in Model.Members)
+@foreach (var p in Model.Picks)
+{
+    <div class="draftmember-box-@p.PickTime.ToString().ToLower()" id="DraftMemberBox-@p.MemberId">
+        <p class="draftmember-name">@p.MemberName</p>
+    </div>
+    if (p.PickTime == RotisserieDraft.ViewModels.PickTime.History)
     {
-        <div class="draftmember-box-@m.DraftPosition.Equals(Model.CurrentPickPosition)" id="DraftMemberBox-@m.Id" onclick="togglePickList(@m.Id)">
-            <p class="draftmember-name">@m.DisplayName</p>
-            <ul class="draftmember-lastpicks" id="DraftMemberPicks-@m.Id">
-            @foreach (var pick in m.LastThreePicks)
-            {
-                <li class="draftmember-lastpicks">@pick</li>
-            }
-            </ul>
+        <div class="draftmember-box-history" id="PickBox-@p.MemberId">
+            <p class="pick-cardname">@p.CardName</p>
         </div>
-        if (m.DraftPosition.Equals(Model.CurrentWheelPosition))
-        {
-            <hr class="draft-wheelline"/>
-        }
     }
-</fieldset>
+    <div style="clear: both"></div>
+}
 <p>
     @Html.ActionLink("Back to List", "Index")
 </p>
@@ -41,7 +35,7 @@
         <tr>
             <td>
                 <div class="display-label">Current amount of picks</div>
-                <div class="display-field">@Model.CurrentWheelPosition</div>
+                <div class="display-field">@Model.CurrentNumberOfPicks</div>
             </td>
             <td>
                 <div class="display-label">Maximum amount of picks</div>

@@ -128,7 +128,7 @@ namespace RotisserieDraft.Tests.Domain
 			{
 				repository.Add(member);
 			}
-			catch (GenericADOException genericAdoException)
+			catch (GenericADOException)
 			{
 				return;
 			}

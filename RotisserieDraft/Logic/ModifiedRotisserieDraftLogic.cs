@@ -60,7 +60,7 @@ namespace RotisserieDraft.Logic
 
 		    IDraftMemberPositionsRepository dmpr = new DraftMemberPositionsRepository();
 		    var nextMemberDraftPosition = dmpr.GetDraftMemberPositionByDraftAndPosition(draft,
-		                                                                                NextPos(picks.Count, draft.DraftSize));
+		                                                                                GetNextPickPosition(picks.Count, draft.DraftSize));
 
 		    draft.CurrentTurn = nextMemberDraftPosition.Member;
 
@@ -72,7 +72,7 @@ namespace RotisserieDraft.Logic
 			return true;
 		}
 
-        private static int NextPos(int nrOfPicks = 0, int draftSize = 8)
+        public int GetNextPickPosition(int nrOfPicks = 0, int draftSize = 8)
         {
             int finishedRounds = nrOfPicks / (draftSize * 2);
             int posInRound = nrOfPicks % (draftSize * 2);
@@ -103,7 +103,7 @@ namespace RotisserieDraft.Logic
 			}
 		}
 
-		private static int OneStepInDraft(int position, int maxSize, bool clockwise)
+		public int OneStepInDraft(int position, int maxSize, bool clockwise)
 		{
 			if (clockwise)
 			{

@@ -9,7 +9,7 @@
 <ul id="drafts">
     @foreach (var d in Model)
     {
-        <li>@d.Name (Created by @d.CreatorName) @Html.ActionLink("Open", "Details", "Draft", new { id = d.Id }, new { })</li>
+        <li> @Html.ActionLink(d.Name, "Details", "Draft", new { id = d.Id }, new { }) (Created by @d.CreatorName)</li>
     }
 </ul>
 

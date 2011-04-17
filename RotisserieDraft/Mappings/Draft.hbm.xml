@@ -74,7 +74,7 @@
     <property name="CreatedDate" type="DateTime" not-null="true" />
     <many-to-one name="Member" column="MemberId" />
     <many-to-one name="Draft" column="DraftId" unique-key="DraftCardUnique"/>
-    <many-to-one name="Card" column="CardId" unique-key="DraftCardUnique" cascade="all"/>
+    <many-to-one name="Card" column="CardId" unique-key="DraftCardUnique"/>
   </class>
 
   <class name="FuturePick">

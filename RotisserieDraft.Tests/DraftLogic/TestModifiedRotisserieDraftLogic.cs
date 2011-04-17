@@ -107,7 +107,10 @@ namespace RotisserieDraft.Tests.DraftLogic
                                                _members[2].Id, _members[3].Id,
                                                _members[4].Id, _members[5].Id, _members[6].Id, _members[7].Id);
 
-            // use session to try to load the pick
+            draftLogic.PickCard(draft.Id, _members[0].Id, _cards[5].Id);
+            draftLogic.PickCard(draft.Id, _members[1].Id, _cards[11].Id);
+
+            // use session to try to load the pick)
             using (var session = _sessionFactory.OpenSession())
             {
                 var fromDb = session.Get<Draft>(draft.Id);

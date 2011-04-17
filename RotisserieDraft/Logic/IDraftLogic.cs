@@ -13,6 +13,7 @@ namespace RotisserieDraft.Logic
         
         int CurrentWheelPosition(int draftId);
 	    int CurrentPickPosition(int draftId);
+        int GetNextPickPosition(int nrOfPicks, int draftSize);
 
         Draft CreateDraft(string draftName, int ownerId, bool randomPositions, int numberOfPicksPerPlayer, params int[] memberIds);
 	}

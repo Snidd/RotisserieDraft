@@ -248,20 +248,38 @@ table.draftinformation td
 
 /* DRAFTMEMBER
 ----------------------------------------------------------*/
-div.draftmember-box-False
+div.draftmember-box-history
 {
     border: solid 1px #e8eef4;
     padding: 0.5em 0.5em 0.5em 0.5em;
-    margin: 1em 0px 0px 0px;
+    margin: 1em 2em 0px 0px;
     background-color: #eeeeee;
+    width: 300px; 
+    float: left;
+    color: #cccccc;
 }
 
-div.draftmember-box-True
+div.draftmember-box-current
 {
     border: solid 1px #e8eef4;
     padding: 0.5em 0.5em 0.5em 0.5em;
     margin: 1em 0px 0px 0px;
     background-color: #C5EDE0;
+    color: #000000;
+    font-weight: bold;
+    width: 300px; 
+    float: left;
+}
+
+div.draftmember-box-future
+{
+    border: solid 1px #e8eef4;
+    padding: 0.5em 0.5em 0.5em 0.5em;
+    margin: 1em 0px 0px 0px;
+    background-color: #eeeeee;
+    color: #000000;
+    width: 300px; 
+    float: left;
 }
 
 hr.draft-wheelline
@@ -275,7 +293,13 @@ p.draftmember-name
 {
     padding: 0px 0px 0px 0px;
     margin: 0px 0px 0px 0px;
-    color: #000000;
+}
+
+p.pick-cardname
+{
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    color: #888888;
 }
 
 li.draftmember-lastpicks

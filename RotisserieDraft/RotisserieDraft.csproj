@@ -102,6 +102,7 @@
     <Compile Include="Util\CardExtenderUtils.cs" />
     <Compile Include="ViewModels\DraftListViewModel.cs" />
     <Compile Include="ViewModels\DraftViewModel.cs" />
+    <Compile Include="ViewModels\PickViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\draftdb.sdf">

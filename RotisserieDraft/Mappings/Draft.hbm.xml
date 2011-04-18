@@ -36,7 +36,8 @@
   <class name="Member">
     <id name="Id" column="MemberId" type="Int32">
       <generator class="native"></generator>
-    </id>    
+    </id>
+    <property name="UserName" type="String" unique="true"/>
     <property name="FullName" type="String"/>
     <property name="Password" type="String"/>
     <property name="Email" type="String" unique="true"/>

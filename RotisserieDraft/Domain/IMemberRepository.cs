@@ -13,5 +13,6 @@ namespace RotisserieDraft.Domain
 		void Remove(Member member);
 		Member GetById(int memberId);
 		Member GetByEmail(string email);
+	    Member GetByUsername(string username);
 	}
 }

@@ -24,6 +24,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <ExcludeGeneratedDebugSymbol>true</ExcludeGeneratedDebugSymbol>
+    <ExcludeApp_Data>true</ExcludeApp_Data>
+    <PublishDatabases>false</PublishDatabases>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -67,6 +70,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\DraftController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Domain\ICardRepository.cs" />
@@ -100,6 +104,7 @@
     <Compile Include="Repositories\NHibernateHelper.cs" />
     <Compile Include="Repositories\PickRepository.cs" />
     <Compile Include="Util\CardExtenderUtils.cs" />
+    <Compile Include="ViewModels\AccountViewModel.cs" />
     <Compile Include="ViewModels\DraftListViewModel.cs" />
     <Compile Include="ViewModels\DraftViewModel.cs" />
     <Compile Include="ViewModels\PickViewModel.cs" />
@@ -165,6 +170,10 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Draft\Details.cshtml" />
     <Content Include="Views\Draft\Index.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\LogOn.cshtml" />
+    <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
+    <Content Include="Views\Account\ChangePassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

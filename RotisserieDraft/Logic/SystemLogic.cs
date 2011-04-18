@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Security;
 using RotisserieDraft.Domain;
 using RotisserieDraft.Models;
 using RotisserieDraft.Repositories;
@@ -10,6 +11,63 @@ namespace RotisserieDraft.Logic
 {
     public class SystemLogic : IDisposable
     {
+        public bool CreateUser(string username, string email, string password, string fullname)
+        {
+            IMemberRepository mr = new MemberRepository();
+            
+            string passwordHash = FormsAuthentication.HashPasswordForStoringInConfigFile(
+                                      password, "sha1");
+
+            var member = new Member {UserName = username, Email = email, Password = passwordHash, FullName = fullname};
+
+            try
+            {
+                mr.Add(member);
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool AuthenticateUser(string username, string password)
+        {
+            IMemberRepository mr = new MemberRepository();
+            Member member = mr.GetByUsername(username);
+            if (member == null)
+                return false;
+
+            string passwordHash = FormsAuthentication.HashPasswordForStoringInConfigFile(password, "sha1");
+            return member.Password == passwordHash;
+        }
+
+        public bool ChangePassword(string username, string oldPassword, string newPassword)
+        {
+            IMemberRepository mr = new MemberRepository();
+            Member member = mr.GetByUsername(username);
+            if (member == null)
+                return false;
+
+            string oldPasswordHash = FormsAuthentication.HashPasswordForStoringInConfigFile(oldPassword, "sha1");
+            if (member.Password != oldPasswordHash)
+                return false;
+
+            string newPasswordHash = FormsAuthentication.HashPasswordForStoringInConfigFile(newPassword, "sha1");
+            member.Password = newPasswordHash;
+            try
+            {
+                mr.Update(member);
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public Draft GetDraftById(int draftId)
         {
             IDraftRepository dr = new DraftRepository();

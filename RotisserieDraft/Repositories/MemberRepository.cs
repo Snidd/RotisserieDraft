@@ -58,5 +58,17 @@ namespace RotisserieDraft.Repositories
 				return member;
 			}
 		}
+
+	    public Member GetByUsername(string username)
+	    {
+            using (ISession session = NHibernateHelper.OpenSession())
+            {
+                var member = session
+                    .CreateCriteria(typeof(Member))
+                    .Add(Restrictions.Eq("UserName", username))
+                    .UniqueResult<Member>();
+                return member;
+            }
+	    }
 	}
 }

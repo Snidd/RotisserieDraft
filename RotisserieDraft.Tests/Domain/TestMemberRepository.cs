@@ -20,10 +20,10 @@ namespace RotisserieDraft.Tests.Domain
 
 		private readonly Member[] _members = new[]
 		        {
-		            new Member {Email = "a@a.a", FullName = "Anna Adamsson"},
-		            new Member {Email = "b@b.b", FullName = "Bertil Bengtsson"},
-		            new Member {Email = "b@c.c", FullName = "Christopher Clemedtsson"},
-					new Member {Email = "b@d.d", FullName = "David Danielsson"},
+		            new Member {Email = "a@a.a", FullName = "Anna Adamsson", UserName = "AnnaA"},
+		            new Member {Email = "b@b.b", FullName = "Bertil Bengtsson", UserName = "BertilB"},
+		            new Member {Email = "b@c.c", FullName = "Christopher Clemedtsson", UserName = "ChristopherC"},
+					new Member {Email = "b@d.d", FullName = "David Danielsson", UserName = "DavidD"},
 		        };
 
 		[ClassInitialize]
@@ -59,7 +59,7 @@ namespace RotisserieDraft.Tests.Domain
 		[TestMethod]
 		public void CanAddNewMember()
 		{
-			var member = new Member {Email = "me@me.com", FullName = "Magnus", Password = "asdf"};
+			var member = new Member {Email = "me@me.com", FullName = "Magnus", Password = "asdf", UserName = "MagnusM"};
 
 			IMemberRepository repository = new MemberRepository();
 			repository.Add(member);

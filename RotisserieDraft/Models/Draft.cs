@@ -17,13 +17,15 @@ namespace RotisserieDraft.Models
 		public virtual int Id { get; set; }
 		public virtual DateTime CreatedDate { get; set; }
 		public virtual string Name { get; set; }
+
 		public virtual bool Public { get; set; }
+		public virtual bool Started { get; set; }
+		public virtual bool Finished { get; set; }
+
 		public virtual int MaximumPicksPerMember { get; set; }
 		public virtual int DraftSize { get; set; }
 		public virtual Member Owner { get; set; }
 		public virtual Member CurrentTurn { get; set; }
-		public virtual bool Clockwise { get; set; }
-		public virtual int StartPosition { get; set; }
 
 		public virtual IList<DraftMemberPositions> MemberPositions { get; set; }
 	}

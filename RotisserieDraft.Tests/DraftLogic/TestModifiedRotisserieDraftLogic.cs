@@ -103,12 +103,19 @@ namespace RotisserieDraft.Tests.DraftLogic
         public void CanCreateDraftFixedPositions()
         {
             IDraftLogic draftLogic = new ModifiedRotisserieDraftLogic();
-            var draft = draftLogic.CreateDraft("My Testdraft", _members[1].Id, false, 75, _members[0].Id, _members[1].Id,
-                                               _members[2].Id, _members[3].Id,
-                                               _members[4].Id, _members[5].Id, _members[6].Id, _members[7].Id);
+        	var draft = draftLogic.CreateDraft("My Testdraft", _members[1].Id, 75, true);
 
-            draftLogic.PickCard(draft.Id, _members[0].Id, _cards[5].Id);
-            draftLogic.PickCard(draft.Id, _members[1].Id, _cards[11].Id);
+        	draftLogic.AddMemberToDraft(draft.Id, _members[0].Id);
+			draftLogic.AddMemberToDraft(draft.Id, _members[1].Id);
+			draftLogic.AddMemberToDraft(draft.Id, _members[2].Id);
+			draftLogic.AddMemberToDraft(draft.Id, _members[3].Id);
+			draftLogic.AddMemberToDraft(draft.Id, _members[4].Id);
+			draftLogic.AddMemberToDraft(draft.Id, _members[5].Id);
+			draftLogic.AddMemberToDraft(draft.Id, _members[6].Id);
+			draftLogic.AddMemberToDraft(draft.Id, _members[7].Id);
+
+            //draftLogic.PickCard(draft.Id, _members[0].Id, _cards[5].Id);
+            //draftLogic.PickCard(draft.Id, _members[1].Id, _cards[11].Id);
 
             // use session to try to load the pick)
             using (var session = _sessionFactory.OpenSession())
@@ -120,10 +127,8 @@ namespace RotisserieDraft.Tests.DraftLogic
                 Assert.AreNotSame(draft, fromDb);
 
                 Assert.AreEqual(draft.Owner.Id, fromDb.Owner.Id);
-                Assert.AreEqual(draft.DraftSize, fromDb.DraftSize);
                 Assert.AreEqual(draft.MaximumPicksPerMember, fromDb.MaximumPicksPerMember);
-                Assert.AreEqual(8, draft.DraftSize);
-                Assert.AreEqual(_members[0].Id, draft.CurrentTurn.Id);
+                Assert.AreEqual(8, fromDb.DraftSize);
 
                 IDraftMemberPositionsRepository dmpr = new DraftMemberPositionsRepository();
 
@@ -155,23 +160,43 @@ namespace RotisserieDraft.Tests.DraftLogic
 		public void CanCreateDraftRandomPositions()
 		{
 			IDraftLogic draftLogic = new ModifiedRotisserieDraftLogic();
-            var draft1 = draftLogic.CreateDraft("My Testdraft", _members[1].Id, true, 75, _members[0].Id, _members[1].Id, _members[2].Id, _members[3].Id,
-                              _members[4].Id, _members[5].Id, _members[6].Id, _members[7].Id);
+			var draft1 = draftLogic.CreateDraft("My Testdraft", _members[1].Id, 75, true);
 
-            var draft2 = draftLogic.CreateDraft("My Testdraft 2", _members[2].Id, true, 75, _members[0].Id, _members[1].Id, _members[2].Id, _members[3].Id,
-                              _members[4].Id, _members[5].Id, _members[6].Id, _members[7].Id);
+			for (var i = 0; i < 8; i++)
+			{
+				draftLogic.AddMemberToDraft(draft1.Id, _members[i].Id);
+			}
+
+			var draft2 = draftLogic.CreateDraft("My Testdraft 2", _members[2].Id, 75, true);
+			for (var i = 0; i < 8; i++)
+			{
+				draftLogic.AddMemberToDraft(draft2.Id, _members[i].Id);
+			}
+
+			var draft3 = draftLogic.CreateDraft("My Testdraft 3", _members[2].Id, 75, true);
+			for (var i = 0; i < 8; i++)
+			{
+				draftLogic.AddMemberToDraft(draft3.Id, _members[i].Id);
+			}
 
 
-            var draft3 = draftLogic.CreateDraft("My Testdraft 3", _members[2].Id, true, 75, _members[0].Id, _members[1].Id, _members[2].Id, _members[3].Id,
-                              _members[4].Id, _members[5].Id, _members[6].Id, _members[7].Id);
+			var draft4 = draftLogic.CreateDraft("My Testdraft 4", _members[2].Id, 75, true);
+			for (var i = 0; i < 8; i++)
+			{
+				draftLogic.AddMemberToDraft(draft4.Id, _members[i].Id);
+			}
 
+			var draft5 = draftLogic.CreateDraft("My Testdraft 5", _members[2].Id, 75, true);
+			for (var i = 0; i < 8; i++)
+			{
+				draftLogic.AddMemberToDraft(draft5.Id, _members[i].Id);
+			}
 
-            var draft4 = draftLogic.CreateDraft("My Testdraft 4", _members[2].Id, true, 75, _members[0].Id, _members[1].Id, _members[2].Id, _members[3].Id,
-                              _members[4].Id, _members[5].Id, _members[6].Id, _members[7].Id);
-
-
-            var draft5 = draftLogic.CreateDraft("My Testdraft 5", _members[2].Id, true, 75, _members[0].Id, _members[1].Id, _members[2].Id, _members[3].Id,
-                              _members[4].Id, _members[5].Id, _members[6].Id, _members[7].Id);
+        	draftLogic.StartDraft(draft1.Id, true);
+			draftLogic.StartDraft(draft2.Id, true);
+			draftLogic.StartDraft(draft3.Id, true);
+			draftLogic.StartDraft(draft4.Id, true);
+			draftLogic.StartDraft(draft5.Id, true);
 
             IDraftMemberPositionsRepository dmpr = new DraftMemberPositionsRepository();
 
@@ -204,8 +229,13 @@ namespace RotisserieDraft.Tests.DraftLogic
         public void CanDoSimple4PlayerDraft()
         {
             IDraftLogic draftLogic = new ModifiedRotisserieDraftLogic();
-            var draft = draftLogic.CreateDraft("My Testdraft", _members[1].Id, false, 75, _members[0].Id, _members[1].Id,
-                                               _members[2].Id, _members[3].Id);
+			var draft = draftLogic.CreateDraft("My Testdraft", _members[1].Id, 75, true);
+			for (var i = 0; i < 4; i++)
+			{
+				draftLogic.AddMemberToDraft(draft.Id, _members[i].Id);
+			}
+
+        	draftLogic.StartDraft(draft.Id, false);
 
             using (var sl = new SystemLogic())
             {

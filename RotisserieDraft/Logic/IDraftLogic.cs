@@ -11,10 +11,13 @@ namespace RotisserieDraft.Logic
         bool PickCard(int draftId, int memberId, int cardId);
         bool FuturePickCard(int draftId, int memberId, int cardId);
         
-        int CurrentWheelPosition(int draftId);
 	    int CurrentPickPosition(int draftId);
         int GetNextPickPosition(int nrOfPicks, int draftSize);
 
-        Draft CreateDraft(string draftName, int ownerId, bool randomPositions, int numberOfPicksPerPlayer, params int[] memberIds);
+        Draft CreateDraft(string draftName, int ownerId, int numberOfPicksPerPlayer, bool isPublic);
+		bool StartDraft(int draftId, bool randomizeSeats);
+		bool AddMemberToDraft(int draftId, int memberId, int draftPosition);
+		bool AddMemberToDraft(int draftId, int memberId);
+
 	}
 }

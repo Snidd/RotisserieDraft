@@ -20,6 +20,13 @@ namespace RotisserieDraft.Controllers
 
             using (var sl = new SystemLogic())
             {
+            	string userName = "";
+
+				if (System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
+				{
+					userName = System.Web.HttpContext.Current.User.Identity.Name;
+				}
+
                 var drafts = sl.GetDraftList();
                 foreach (var draft in drafts)
                 {
@@ -28,9 +35,13 @@ namespace RotisserieDraft.Controllers
                                        CreatorId = draft.Owner.Id,
                                        CreatorName = sl.GetMember(draft.Owner.Id).FullName,
                                        Id = draft.Id,
-                                       Name = draft.Name,
-                                       Public = draft.Public
+                                       Name = draft.Name
                                    };
+					if (userName.Length > 0)
+					{
+						dlvm.AmIMemberOf = sl.IsMemberOfDraft
+							(sl.GetMember(userName).Id, draft.Id);
+					}
 
                     draftList.Add(dlvm);
                 }
@@ -60,7 +71,6 @@ namespace RotisserieDraft.Controllers
                                   Name = draft.Name,
                                   Owner = sl.GetMember(draft.Owner.Id).FullName,
                                   CreationDate = draft.CreatedDate,
-                                  CurrentWheelPosition = draftLogic.CurrentWheelPosition(id),
                                   CurrentPickPosition = draftLogic.CurrentPickPosition(id),
                                   CurrentNumberOfPicks = picks.Count
                               };
@@ -124,6 +134,7 @@ namespace RotisserieDraft.Controllers
         //
         // GET: /Draft/Create
 
+		[Authorize]
         public ActionResult Create()
         {
             return View();
@@ -132,12 +143,21 @@ namespace RotisserieDraft.Controllers
         //
         // POST: /Draft/Create
 
+		[Authorize]
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create(CreateDraftViewModel model)
         {
             try
             {
-                // TODO: Add insert logic here
+            	IDraftLogic draftLogic = new ModifiedRotisserieDraftLogic();
+
+            	string userName = System.Web.HttpContext.Current.User.Identity.Name;
+				
+				using (var sl = new SystemLogic())
+				{
+					Member member = sl.GetMember(userName);
+					draftLogic.CreateDraft(model.DraftName, member.Id, model.MaximumNumberOfPicks, model.IsPublic);
+				}
 
                 return RedirectToAction("Index");
             }

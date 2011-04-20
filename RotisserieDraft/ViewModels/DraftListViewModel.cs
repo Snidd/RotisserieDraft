@@ -9,8 +9,10 @@ namespace RotisserieDraft.ViewModels
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public bool Public { get; set; }
+
         public string CreatorName { get; set; }
         public int CreatorId { get; set; }
+
+		public bool AmIMemberOf { get; set; }
     }
 }

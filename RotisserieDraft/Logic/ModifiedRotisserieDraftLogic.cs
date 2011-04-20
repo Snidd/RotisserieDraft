@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NHibernate.Exceptions;
@@ -45,6 +46,11 @@ namespace RotisserieDraft.Logic
             var draft = dr.GetById(draftId);
             var member = mr.GetById(memberId);
             var card = cr.GetById(cardId);
+
+			if (draft.Finished || !draft.Started)
+			{
+				return false;
+			}
 
 			IPickRepository pickRepository = new PickRepository();
 			try
@@ -152,70 +158,120 @@ namespace RotisserieDraft.Logic
 	        return dpr.GetDraftPosition(draft, draft.CurrentTurn);
 	    }
 
-	    public Draft CreateDraft(string draftName, int ownerId, bool randomPositions, int numberOfPicksPerPlayer, params int[] memberIds)
+		public bool StartDraft(int draftId, bool randomizeSeats)
 		{
-			var draft = new Draft
-			              	{
-			              		Name = draftName,
-			              		CreatedDate = DateTime.Now,
-			              		MaximumPicksPerMember = numberOfPicksPerPlayer,
+			IDraftRepository dr = new DraftRepository();
+			IDraftMemberPositionsRepository dmpr = new DraftMemberPositionsRepository();
+
+			var draft = dr.GetById(draftId);
+
+			if (randomizeSeats)
+			{
+				var draftMembers = dmpr.GetMemberPositionsByDraft(draft).ToList();
+				var rand = new Random();
+
+				for (var i = 1; i <= draft.DraftSize; i++)
+				{
+					var randomPlayer = rand.Next(0, draftMembers.Count - 1);
+					var member = draftMembers[randomPlayer].Member;
+					dmpr.UpdatePosition(draft, member, i);
+					draftMembers.RemoveAt(randomPlayer);
+				}
+			}
+
+			var startingPlayer = dmpr.GetDraftMemberPositionByDraftAndPosition(draft, 1);
+
+			draft.Started = true;
+			draft.CurrentTurn = startingPlayer.Member;
+
+			dr.Update(draft);
+
+			return false;
+		}
+
+		public bool AddMemberToDraft(int draftId, int memberId)
+		{
+			IDraftMemberPositionsRepository dmpr = new DraftMemberPositionsRepository();
+			IDraftRepository dr = new DraftRepository();
+			IMemberRepository mr = new MemberRepository();
+
+			var draft = dr.GetById(draftId);
+
+			ICollection<DraftMemberPositions> draftMembers = dmpr.GetMemberPositionsByDraft(draft);
+
+			int newPosition = 0;
+			bool foundPosition = true;
+
+			while (foundPosition)
+			{
+				foundPosition = false;
+				newPosition++;
+
+				foreach (var draftMember in draftMembers)
+				{
+					if (draftMember.Position == newPosition)
+					{
+						foundPosition = true;
+					}
+				}
+				
+			}
+			try
+			{
+				dmpr.AddMemberToDraft(draft, mr.GetById(memberId), newPosition);
+				draft.DraftSize++;
+				dr.Update(draft);
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
+		public bool AddMemberToDraft(int draftId, int memberId, int draftPosition)
+		{
+			IDraftMemberPositionsRepository dmpr = new DraftMemberPositionsRepository();
+			IDraftRepository dr = new DraftRepository();
+			IMemberRepository mr = new MemberRepository();
+
+			try
+			{
+				var draft = dr.GetById(draftId);
+				dmpr.AddMemberToDraft(draft, mr.GetById(memberId), draftPosition);
+				draft.DraftSize++;
+				dr.Update(draft);
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
+	    public Draft CreateDraft(string draftName, int ownerId, int numberOfPicksPerPlayer, bool isPublic)
+	    {
+	    	var draft = new Draft
+	    	            	{
+	    	            		Name = draftName,
+	    	            		CreatedDate = DateTime.Now,
+	    	            		MaximumPicksPerMember = numberOfPicksPerPlayer,
+	    	            		Public = isPublic,
+								Started = false,
+								Finished = false,
 			              	};
+
 			IDraftRepository dr = new DraftRepository();
 			IDraftMemberPositionsRepository dmpr = new DraftMemberPositionsRepository();
             IMemberRepository mr = new MemberRepository();
 
             draft.Owner = mr.GetById(ownerId);
+	    	draft.DraftSize = 0;
 
-		    List<int> convertedList = memberIds.ToList();
-
-			draft.StartPosition = 1;
 			dr.Add(draft);
 
-			var counter = 0;
-            var draftSize = memberIds.Count();
-
-            if (randomPositions)
-            {
-                var rand = new Random();
-                for (var i=1;i<=draftSize;i++)
-                {   
-                    var randomPosition = rand.Next(0, convertedList.Count - 1);
-                    dmpr.AddMemberToDraft(draft, mr.GetById(convertedList[randomPosition]), i);
-                    convertedList.Remove(convertedList[randomPosition]);
-                }
-            }
-            else
-            {
-                foreach (var memberId in memberIds)
-                {
-                    counter++;
-                    dmpr.AddMemberToDraft(draft, mr.GetById(memberId), counter);
-                }
-            }
-
-		    draft = dr.GetById(draft.Id);
-			
-			draft.DraftSize = draftSize;
-            draft.CurrentTurn = mr.GetById(memberIds[0]);
-
-			dr.Update(draft);
 
 			return draft;
 		}
-
-        public int CurrentWheelPosition(int draftId)
-		{
-            IDraftRepository dr = new DraftRepository();
-            var draft = dr.GetById(draftId);
-
-			var currentWheelPosition = draft.StartPosition;
-			for (int i = 0; i < draft.DraftSize; i++)
-			{
-				currentWheelPosition = OneStepInDraft(currentWheelPosition, draft.DraftSize, true);
-			}
-			return currentWheelPosition;
-		}
-
-
 	}
 }

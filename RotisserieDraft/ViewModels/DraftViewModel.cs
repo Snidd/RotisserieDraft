@@ -25,7 +25,6 @@ namespace RotisserieDraft.ViewModels
         
         public int CurrentNumberOfPicks { get; set; }
         public int MaximumNumberOfPicks { get; set; }
-        public int CurrentWheelPosition { get; set; }
         public int CurrentPickPosition { get; set; }
         
         public string Owner { get; set; }

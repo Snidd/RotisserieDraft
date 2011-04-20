@@ -11,10 +11,10 @@
     <property name="Name" type="String" />
     <property name="CreatedDate" type="DateTime" not-null="true" />
     <property name="Public" type="System.Boolean" />
+    <property name="Started" type="System.Boolean" />
+    <property name="Finished" type="System.Boolean" />
     <property name="MaximumPicksPerMember" type="Int32"/>
-    <property name="StartPosition" type="Int32"/>
     <property name="DraftSize" type="Int32"/>
-    <property name="Clockwise" type="System.Boolean"/>
     <many-to-one name="CurrentTurn" class="Member,NHibernateOneToOne" column="CurrentMemberId"/>
     <many-to-one name="Owner" class="Member,NHibernateOneToOne" column="OwnerId" cascade="all"/>
     <bag name="MemberPositions" table="DraftMemberPositions" cascade="all">

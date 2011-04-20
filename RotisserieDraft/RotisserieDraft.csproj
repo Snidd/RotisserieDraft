@@ -105,6 +105,7 @@
     <Compile Include="Repositories\PickRepository.cs" />
     <Compile Include="Util\CardExtenderUtils.cs" />
     <Compile Include="ViewModels\AccountViewModel.cs" />
+    <Compile Include="ViewModels\CreateDraftViewModel.cs" />
     <Compile Include="ViewModels\DraftListViewModel.cs" />
     <Compile Include="ViewModels\DraftViewModel.cs" />
     <Compile Include="ViewModels\PickViewModel.cs" />
@@ -174,6 +175,7 @@
     <Content Include="Views\Account\LogOn.cshtml" />
     <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
     <Content Include="Views\Account\ChangePassword.cshtml" />
+    <Content Include="Views\Draft\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

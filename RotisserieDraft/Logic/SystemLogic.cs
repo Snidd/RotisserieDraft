@@ -129,11 +129,28 @@ namespace RotisserieDraft.Logic
             return ret == null ? new List<DraftMemberPositions>() : ret.ToList();
         }
 
+		public bool IsMemberOfDraft(int memberId, int draftId)
+		{
+			IDraftMemberPositionsRepository dmpr = new DraftMemberPositionsRepository();
+			IDraftRepository dr = new DraftRepository();
+
+			var draft = dr.GetById(draftId);
+			var memberPositions = dmpr.GetMemberPositionsByDraft(draft);
+
+			return memberPositions.Any(memberPosition => memberPosition.Member.Id == memberId);
+		}
+
         public Member GetMember(int memberId)
         {
             IMemberRepository mr = new MemberRepository();
             return mr.GetById(memberId);
         }
+
+		public Member GetMember(string userName)
+		{
+			IMemberRepository mr = new MemberRepository();
+			return mr.GetByUsername(userName);
+		}
 
         public Card GetCard(int cardId)
         {
@@ -160,7 +177,7 @@ namespace RotisserieDraft.Logic
         public List<Draft> GetDraftList()
         {
             IDraftRepository dr = new DraftRepository();
-            var ret = dr.List();
+            var ret = dr.ListActive();
             return ret == null ? new List<Draft>() : ret.ToList();
         }
 

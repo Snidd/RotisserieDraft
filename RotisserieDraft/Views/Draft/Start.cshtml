@@ -1,0 +1,42 @@
+﻿@model RotisserieDraft.ViewModels.StartDraftViewModel
+
+@{
+    ViewBag.Title = "Start";
+}
+
+<h2>Start</h2>
+
+<fieldset>
+    <legend>@Html.DisplayFor(model => model.DraftName)</legend>                                      
+
+    @foreach (var dm in Model.DraftMembers)
+    {   
+        <div class="draftmember-box">Position @dm.DraftPosition - @dm.FullName</div>
+        <div style="clear: both"></div>
+    }
+    
+</fieldset>
+
+    @using (Html.BeginForm("AddMember", "Draft"))
+    {
+        <div class="display-label">Member email</div>
+        <div class="display-field">@Html.TextBox("MemberIdentification")</div>
+        
+        @Html.Hidden("id", Model.DraftId);
+
+        <input type="submit" value="Add member to draft" />
+    }
+
+    @using (Html.BeginForm())
+    {
+        @Html.Hidden("DraftId", Model.DraftId)
+        <div class="display-label">@Html.LabelFor(model => model.RandomizeSeats)</div>
+        <div class="display-field">
+            @Html.EditorFor(model => model.RandomizeSeats)
+        </div>
+        
+        <input type="submit" value="Start draft" />
+    }
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>

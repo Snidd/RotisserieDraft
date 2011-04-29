@@ -13,5 +13,10 @@ namespace RotisserieDraft.Logic
         {
             return new ModifiedRotisserieDraftLogic();
         }
+
+        public static IDraftLogic DefaultDraftLogic()
+        {
+            return new ModifiedRotisserieDraftLogic();
+        }
     }
 }

@@ -107,8 +107,10 @@
     <Compile Include="ViewModels\AccountViewModel.cs" />
     <Compile Include="ViewModels\CreateDraftViewModel.cs" />
     <Compile Include="ViewModels\DraftListViewModel.cs" />
+    <Compile Include="ViewModels\DraftMemberViewModel.cs" />
     <Compile Include="ViewModels\DraftViewModel.cs" />
     <Compile Include="ViewModels\PickViewModel.cs" />
+    <Compile Include="ViewModels\StartDraftViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\draftdb.sdf">
@@ -176,6 +178,7 @@
     <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
     <Content Include="Views\Account\ChangePassword.cshtml" />
     <Content Include="Views\Draft\Create.cshtml" />
+    <Content Include="Views\Draft\Start.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

@@ -259,6 +259,17 @@ div.draftmember-box-history
     color: #cccccc;
 }
 
+div.draftmember-box
+{
+    border: solid 1px #000000;
+    padding: 0.5em 0.5em 0.5em 0.5em;
+    margin: 1em 2em 0px 0px;
+    background-color: #cccccc;
+    width: 300px; 
+    float: left;
+    color: #000000;
+}
+
 div.draftmember-box-current
 {
     border: solid 1px #e8eef4;

@@ -11,6 +11,21 @@ namespace RotisserieDraft.Logic
 {
     public class SystemLogic : IDisposable
     {
+        public Member FindMember(string memberIdentification)
+        {
+            IMemberRepository mr = new MemberRepository();
+
+            var member = mr.GetByEmail(memberIdentification);
+            if (member != null)
+                return member;
+
+            member = mr.GetByUsername(memberIdentification);
+            if (member != null)
+                return member;
+
+            return null;
+        }
+
         public bool CreateUser(string username, string email, string password, string fullname)
         {
             IMemberRepository mr = new MemberRepository();

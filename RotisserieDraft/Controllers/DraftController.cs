@@ -13,6 +13,20 @@ namespace RotisserieDraft.Controllers
     {
         //
         // GET: /Draft/
+        private Member GetAuthorizedMember()
+        {
+            using (var sl = new SystemLogic())
+            {
+                if (System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
+                {
+                    var userName = System.Web.HttpContext.Current.User.Identity.Name;
+                    var member = sl.GetMember(userName);
+                    if (member != null)
+                        return member;
+                }
+                return null;
+            }
+        }
 
         public ActionResult Index()
         {
@@ -20,12 +34,7 @@ namespace RotisserieDraft.Controllers
 
             using (var sl = new SystemLogic())
             {
-            	string userName = "";
-
-				if (System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
-				{
-					userName = System.Web.HttpContext.Current.User.Identity.Name;
-				}
+                var authMember = GetAuthorizedMember();
 
                 var drafts = sl.GetDraftList();
                 foreach (var draft in drafts)
@@ -37,10 +46,10 @@ namespace RotisserieDraft.Controllers
                                        Id = draft.Id,
                                        Name = draft.Name
                                    };
-					if (userName.Length > 0)
+					if (authMember != null)
 					{
 						dlvm.AmIMemberOf = sl.IsMemberOfDraft
-							(sl.GetMember(userName).Id, draft.Id);
+							(authMember.Id, draft.Id);
 					}
 
                     draftList.Add(dlvm);
@@ -149,21 +158,90 @@ namespace RotisserieDraft.Controllers
         {
             try
             {
-            	IDraftLogic draftLogic = new ModifiedRotisserieDraftLogic();
+            	IDraftLogic draftLogic = GetDraftLogic.DefaultDraftLogic();
 
-            	string userName = System.Web.HttpContext.Current.User.Identity.Name;
-				
 				using (var sl = new SystemLogic())
 				{
-					Member member = sl.GetMember(userName);
-					draftLogic.CreateDraft(model.DraftName, member.Id, model.MaximumNumberOfPicks, model.IsPublic);
-				}
+					var draft = draftLogic.CreateDraft(model.DraftName, GetAuthorizedMember().Id, model.MaximumNumberOfPicks, model.IsPublic);
 
-                return RedirectToAction("Index");
+                    return RedirectToAction("Start", new { id = draft.Id });
+				}
             }
             catch
             {
                 return View();
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult AddMember(string memberIdentification, int id)
+        {
+            using (var sl = new SystemLogic())
+            {
+                var authMember = GetAuthorizedMember();
+                var draft = sl.GetDraftById(id);
+
+                if (draft.Owner.Id != authMember.Id)
+                    return RedirectToAction("Index");
+
+                var dl = GetDraftLogic.FromDraft(draft);
+
+                var member = sl.FindMember(memberIdentification);
+                if (member != null)
+                {
+                    dl.AddMemberToDraft(draft.Id, member.Id);
+                }
+
+                return RedirectToAction("Start", new {id = draft.Id});
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult Start(StartDraftViewModel model)
+        {
+            using (var sl = new SystemLogic())
+            {
+                var authMember = GetAuthorizedMember();
+                var draft = sl.GetDraftById(model.DraftId);
+
+                if (draft.Owner.Id != authMember.Id || draft.Started || draft.Finished)
+                    return RedirectToAction("Index");
+
+                var dl = GetDraftLogic.FromDraft(draft);
+                dl.StartDraft(draft.Id, model.RandomizeSeats);
+
+                return RedirectToAction("Details", new { id = draft.Id });
+            }
+        }
+
+        [Authorize]
+        public ActionResult Start(int id)
+        {
+            using (var sl = new SystemLogic())
+            {
+                var authMember = GetAuthorizedMember();
+                var draft = sl.GetDraftById(id);
+
+                if (draft.Owner.Id != authMember.Id || draft.Started || draft.Finished)
+                    return RedirectToAction("Index");
+
+                var startDraftVm = new StartDraftViewModel {DraftName = draft.Name, DraftId = draft.Id };
+                var draftMemberPositions = sl.GetDraftMembers(draft.Id);
+
+                foreach (var dfs in draftMemberPositions)
+                {
+                    var member = sl.GetMember(dfs.Id);
+                    startDraftVm.DraftMembers.Add(new DraftMemberViewModel
+                                                      {
+                                                          DraftPosition = dfs.Position,
+                                                          Email = member.Email,
+                                                          FullName = member.FullName
+                                                      });
+                }
+
+                return View(startDraftVm);
             }
         }
         

@@ -59,19 +59,19 @@ namespace RotisserieDraft.Repositories
 			}
 		}
 
-		public Card FindCard(string searchtext)
+        public ICollection<Card> FindCard(string searchtext)
 		{
 			using (var session = NHibernateHelper.OpenSession())
 			{
 				var card = session
 					.CreateCriteria(typeof(Card))
-					.Add(Restrictions.Like("Name", searchtext))
-					.UniqueResult<Card>();
-				return card;
+					.Add(Restrictions.Like("Name", searchtext, MatchMode.Anywhere))
+					.List<Card>();
+                return card;
 			}
 		}
 
-		public Card FindCard(string searchtext, ICollection<MagicColor> colors)
+		public ICollection<Card> FindCard(string searchtext, ICollection<MagicColor> colors)
 		{
 			throw new NotImplementedException();
 		}

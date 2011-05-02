@@ -70,6 +70,18 @@ namespace RotisserieDraft.Tests.Domain
 			}
 		}
 
+        [TestMethod]
+        public void CandFindCard()
+        {
+            var card = new Card { Name = "White Knight", CastingCost = "WW", Type = "Creature - Knight" };
+            ICardRepository repository = new CardRepository();
+            repository.Add(card);
+
+            var fromDb = repository.FindCard("White");
+            Assert.IsNotNull(fromDb);
+            Assert.AreNotEqual(fromDb.Count, 0);
+        }
+
 		[TestMethod]
 		public void CanAddCard()
 		{

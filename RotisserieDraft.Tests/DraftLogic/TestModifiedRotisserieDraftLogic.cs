@@ -100,6 +100,31 @@ namespace RotisserieDraft.Tests.DraftLogic
 		}
 
         [TestMethod]
+        public void CreateDebugData()
+        {
+            using (SystemLogic sl = new SystemLogic())
+            {
+                sl.CreateUser("Snidd", "magnus@ctrl-ps.com", "magnus", "Magnus Kjellberg");
+                sl.CreateUser("Mats", "mats@ctrl-ps.com", "mats", "Mats Törnros");
+                sl.CreateUser("Rikard", "rikard@rikard.com", "rikard", "Rikard Stenlund");
+
+                var dl = GetDraftLogic.DefaultDraftLogic();
+
+                var member1 = sl.FindMember("Snidd");
+                var member2 = sl.FindMember("Mats");
+                var member3 = sl.FindMember("Rikard");
+
+                var draft = dl.CreateDraft("Min draft", member1.Id, 75, true);
+
+                dl.AddMemberToDraft(draft.Id, member1.Id, 1);
+                dl.AddMemberToDraft(draft.Id, member2.Id, 2);
+                dl.AddMemberToDraft(draft.Id, member3.Id, 3);
+
+                dl.StartDraft(draft.Id, false);
+            }
+        }
+
+        [TestMethod]
         public void CanCreateDraftFixedPositions()
         {
             IDraftLogic draftLogic = new ModifiedRotisserieDraftLogic();

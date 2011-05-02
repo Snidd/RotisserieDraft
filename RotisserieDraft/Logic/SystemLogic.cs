@@ -144,6 +144,19 @@ namespace RotisserieDraft.Logic
             return ret == null ? new List<DraftMemberPositions>() : ret.ToList();
         }
 
+        public List<Card> FindCard(string searchText)
+        {
+            ICardRepository cr = new CardRepository();
+            var ret = cr.FindCard(searchText);
+            return ret == null ? new List<Card>() : ret.ToList();
+        }
+
+        public Card GetCard(string cardName)
+        {
+            ICardRepository cr = new CardRepository();
+            return cr.GetByName(cardName);
+        }
+
 		public bool IsMemberOfDraft(int memberId, int draftId)
 		{
 			IDraftMemberPositionsRepository dmpr = new DraftMemberPositionsRepository();

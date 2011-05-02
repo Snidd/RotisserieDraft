@@ -18,10 +18,14 @@ namespace RotisserieDraft.ViewModels
         {
             Members = new List<DraftMemberVm>();
             Picks = new List<PickViewModel>();
+            FuturePicks = new List<string>();
         }
+
         public int Id { get; set; }
         public List<DraftMemberVm> Members { get; set; }
         public string Name { get; set; }
+
+        public List<string> FuturePicks { get; set; }
         
         public int CurrentNumberOfPicks { get; set; }
         public int MaximumNumberOfPicks { get; set; }

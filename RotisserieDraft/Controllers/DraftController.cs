@@ -28,6 +28,11 @@ namespace RotisserieDraft.Controllers
             }
         }
 
+        public ActionResult Google(int id)
+        {
+            return View(GetDraftViewModel(id));
+        }
+
         public ActionResult Index()
         {
             var draftList = new List<DraftListViewModel>();
@@ -59,41 +64,71 @@ namespace RotisserieDraft.Controllers
             return View(draftList);
         }
 
-        //
-        // GET: /Draft/Details/5
-
-        public ActionResult Details(int id)
+        [Authorize]
+        [HttpPost]
+        public ActionResult Pick(string cardName, int draftId)
         {
-            var draftLogic = GetDraftLogic.FromDraftId(id);
-            var systemLogic = new SystemLogic();
+            var authMember = GetAuthorizedMember();
 
-            if (!draftLogic.IsDraftAvailable(id))
-                return RedirectToAction("Index");
-
-            var draft = systemLogic.GetDraftById(id);
             using (var sl = new SystemLogic())
             {
-                var picks = systemLogic.GetPickList(id);
-                var dvm = new DraftViewModel
-                              {
-                                  MaximumNumberOfPicks = draft.MaximumPicksPerMember,
-                                  Name = draft.Name,
-                                  Owner = sl.GetMember(draft.Owner.Id).FullName,
-                                  CreationDate = draft.CreatedDate,
-                                  CurrentPickPosition = draftLogic.CurrentPickPosition(id),
-                                  CurrentNumberOfPicks = picks.Count
-                              };
+                if (!sl.IsMemberOfDraft(authMember.Id, draftId)) return RedirectToAction("Index");
 
-                var members = systemLogic.GetDraftMembers(id);
+                var draftLogic = GetDraftLogic.FromDraftId(draftId);
+                var card = sl.GetCard(cardName);
+
+                if (card == null)
+                {
+                    var likeList = sl.FindCard(cardName);
+                    return Json(new { pickresult = false, reason = "Card was not found!", alternatives = likeList });
+                }
+
+                var pickSuccess = draftLogic.PickCard(draftId, authMember.Id, card.Id);
+
+                if (!pickSuccess)
+                {
+                    return Json(new { pickresult = false, reason = "Card was already picked, try another card!" });
+                }
+
+                DraftViewModel dvm = GetDraftViewModel(draftId);
+
+                return Json(new { pickresult = true, updatedDvm = dvm });
+            }
+        }
+
+        private DraftViewModel GetDraftViewModel(int draftId)
+        {
+            var draftLogic = GetDraftLogic.FromDraftId(draftId);
+            var systemLogic = new SystemLogic();
+
+            if (!draftLogic.IsDraftAvailable(draftId))
+                return null;
+
+            var draft = systemLogic.GetDraftById(draftId);
+            using (var sl = new SystemLogic())
+            {
+                var picks = systemLogic.GetPickList(draftId);
+                var dvm = new DraftViewModel
+                {
+                    Id = draftId,
+                    MaximumNumberOfPicks = draft.MaximumPicksPerMember,
+                    Name = draft.Name,
+                    Owner = sl.GetMember(draft.Owner.Id).FullName,
+                    CreationDate = draft.CreatedDate,
+                    CurrentPickPosition = draftLogic.CurrentPickPosition(draftId),
+                    CurrentNumberOfPicks = picks.Count
+                };
+
+                var members = systemLogic.GetDraftMembers(draftId);
 
                 foreach (var draftMemberPositions in members)
                 {
-                    var member = sl.GetMember(draftMemberPositions.Id);
+                    var member = sl.GetMember(draftMemberPositions.Member.Id);
                     var draftMemberVm = new DraftMemberVm
-                                  {
-                                      DisplayName = member.FullName,
-                                      Id = member.Id,
-                                  };
+                    {
+                        DisplayName = member.FullName,
+                        Id = member.Id,
+                    };
 
                     dvm.Members.Add(draftMemberVm);
                 }
@@ -110,16 +145,16 @@ namespace RotisserieDraft.Controllers
                     var member = sl.GetMember(pick.Member.Id);
                     var card = sl.GetCard(pick.Card.Id);
 
-                    var pvm = new PickViewModel {CardId = pick.Card.Id, MemberId = pick.Member.Id, PickTime = PickTime.History, CardName = card.Name, MemberName = member.FullName};
+                    var pvm = new PickViewModel { CardId = pick.Card.Id, MemberId = pick.Member.Id, PickTime = PickTime.History, CardName = card.Name, MemberName = member.FullName };
                     dvm.Picks.Add(pvm);
                 }
 
                 var currentPick = new PickViewModel()
-                              {
-                                  MemberId = draft.CurrentTurn.Id,
-                                  MemberName = sl.GetMember(draft.CurrentTurn.Id).FullName,
-                                  PickTime = PickTime.Current,
-                              };
+                {
+                    MemberId = draft.CurrentTurn.Id,
+                    MemberName = sl.GetMember(draft.CurrentTurn.Id).FullName,
+                    PickTime = PickTime.Current,
+                };
                 dvm.Picks.Add(currentPick);
 
                 for (int i = 0; i < draft.DraftSize; i++)
@@ -127,17 +162,38 @@ namespace RotisserieDraft.Controllers
                     var nextDraftPosition = draftLogic.GetNextPickPosition(pickCount + 1 + i, draft.DraftSize);
                     var nextMember = dvm.Members[nextDraftPosition - 1];
                     var nextPick = new PickViewModel
-                                        {
-                                            MemberName = nextMember.DisplayName,
-                                            MemberId = nextMember.Id,
-                                            PickTime = PickTime.Future
-                                        };
+                    {
+                        MemberName = nextMember.DisplayName,
+                        MemberId = nextMember.Id,
+                        PickTime = PickTime.Future
+                    };
 
                     dvm.Picks.Add(nextPick);
                 }
 
-            return View(dvm);
+                var authMember = GetAuthorizedMember();
+                if (authMember != null)
+                {
+                    foreach (FuturePick fp in sl.GetMyFuturePicks(draftId, authMember.Id))
+                    {
+                        Card card = sl.GetCard(fp.Card.Id);
+                        dvm.FuturePicks.Add(card.Name);
+                    }
+                }
+
+                return dvm;
             }
+        }
+
+        //
+        // GET: /Draft/Details/5
+
+        public ActionResult Details(int id)
+        {
+            DraftViewModel dvm = GetDraftViewModel(id);
+            if (dvm == null) return RedirectToAction("Index");
+
+            return View(dvm);
         }
 
         //
@@ -232,7 +288,7 @@ namespace RotisserieDraft.Controllers
 
                 foreach (var dfs in draftMemberPositions)
                 {
-                    var member = sl.GetMember(dfs.Id);
+                    var member = sl.GetMember(dfs.Member.Id);
                     startDraftVm.DraftMembers.Add(new DraftMemberViewModel
                                                       {
                                                           DraftPosition = dfs.Position,

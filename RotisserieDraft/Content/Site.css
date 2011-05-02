@@ -248,6 +248,16 @@ table.draftinformation td
 
 /* DRAFTMEMBER
 ----------------------------------------------------------*/
+div.draftmember-box-futurepick
+{
+    border: solid 1px #000000;
+    padding: 0.5em 0.5em 0.5em 0.5em;
+    margin: 1em 2em 1em 0px;
+    background-color: #ffffff;
+    width: 300px; 
+    color: #777777;
+}
+
 div.draftmember-box-history
 {
     border: solid 1px #e8eef4;

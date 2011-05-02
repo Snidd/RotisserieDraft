@@ -15,7 +15,7 @@ namespace RotisserieDraft.Domain
 		Card GetById(int cardId);
 		Card GetByName(string name);
 
-		Card FindCard(string searchtext);
-		Card FindCard(string searchtext, ICollection<MagicColor> colors);
+        ICollection<Card> FindCard(string searchtext);
+        ICollection<Card> FindCard(string searchtext, ICollection<MagicColor> colors);
 	}
 }

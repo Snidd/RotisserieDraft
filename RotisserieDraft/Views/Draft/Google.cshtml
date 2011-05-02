@@ -4,13 +4,13 @@
     ViewBag.Title = Model.Name;
 }
 <script type="text/ecmascript" language="ecmascript">
-    
+
     function togglePickList(memberId) {
         $('#DraftMemberPicks-' + memberId).toggle(200);
     }
 
     function testMethod(result) {
-        
+
         var jsonResult = eval('(' + result.response + ')');
 
         if (jsonResult.pickresult) {

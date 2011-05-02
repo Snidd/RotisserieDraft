@@ -35,8 +35,7 @@ namespace RotisserieDraft.Logic
 		{
 			if (!IsMyTurn(draftId, memberId))
 			{
-			    FuturePickCard(draftId, memberId, cardId);
-			    return false;
+			    return FuturePickCard(draftId, memberId, cardId);
 			}
 
             IDraftRepository dr = new DraftRepository();

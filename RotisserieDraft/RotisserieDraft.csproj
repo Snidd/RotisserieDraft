@@ -179,6 +179,7 @@
     <Content Include="Views\Account\ChangePassword.cshtml" />
     <Content Include="Views\Draft\Create.cshtml" />
     <Content Include="Views\Draft\Start.cshtml" />
+    <Content Include="Views\Draft\Google.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

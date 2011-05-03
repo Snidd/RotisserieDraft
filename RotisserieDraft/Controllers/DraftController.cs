@@ -185,13 +185,59 @@ namespace RotisserieDraft.Controllers
             }
         }
 
-        //
-        // GET: /Draft/Details/5
+		/// <summary>
+		/// Removes a pick for the authorized member, for now only removes from futurepicks, will be extended later with possibility to remove a pick if next player hasnt picked.
+		/// </summary>
+		/// <param name="cardName"></param>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		[Authorize]
+		public ActionResult RemovePick(int id, string cardName)
+		{
+			var member = GetAuthorizedMember();
 
-        public ActionResult Details(int id)
+			if (!Request.IsAjaxRequest()) return RedirectToAction("Index");
+
+			using (var sl = new SystemLogic())
+			{
+				if (!sl.IsMemberOfDraft(member.Id, id)) return RedirectToAction("Index");
+
+				List<FuturePick> futurePicks = sl.GetMyFuturePicks(id, member.Id);
+
+				foreach (var futurePick in futurePicks)
+				{
+					var card = sl.GetCard(futurePick.Card.Id);
+					if (card.Name.Equals(cardName))
+					{
+						sl.RemoveMyFuturePick(futurePick.Id);
+						return Json(new {dvm = GetDraftViewModel(id), success = true}, JsonRequestBehavior.AllowGet);
+					}
+				}
+
+				return Json(new {success = false}, JsonRequestBehavior.AllowGet);
+			}
+		}
+
+		//
+		// GET: /Draft/Details/5
+		public ActionResult Details(int id)
         {
             DraftViewModel dvm = GetDraftViewModel(id);
             if (dvm == null) return RedirectToAction("Index");
+
+			var member = GetAuthorizedMember();
+			if (member != null)
+			{
+				using (var sl = new SystemLogic())
+				{
+					dvm.IsMemberOfDraft = sl.IsMemberOfDraft(member.Id, id);
+				}
+			}
+
+			if (Request.IsAjaxRequest())
+			{
+				return Json(dvm, JsonRequestBehavior.AllowGet);
+			}
 
             return View(dvm);
         }

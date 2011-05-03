@@ -74,6 +74,7 @@
     <Compile Include="Controllers\DraftController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Domain\ICardRepository.cs" />
+    <Compile Include="Domain\IChatRepository.cs" />
     <Compile Include="Domain\IDraftMemberPositionsRepository.cs" />
     <Compile Include="Domain\IDraftRepository.cs" />
     <Compile Include="Domain\IFuturePickRepository.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Logic\ModifiedRotisserieDraftLogic.cs" />
     <Compile Include="Logic\SystemLogic.cs" />
     <Compile Include="Models\Card.cs" />
+    <Compile Include="Models\Chat.cs" />
     <Compile Include="Models\Draft.cs" />
     <Compile Include="Models\DraftMemberPositions.cs" />
     <Compile Include="Models\FuturePick.cs" />
@@ -96,6 +98,7 @@
     <Compile Include="Models\Pick.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CardRepository.cs" />
+    <Compile Include="Repositories\ChatRepository.cs" />
     <Compile Include="Repositories\DraftMemberPositionsRepository.cs" />
     <Compile Include="Repositories\DraftRepository.cs" />
     <Compile Include="Repositories\FuturePickRepository.cs" />
@@ -116,6 +119,7 @@
     <Content Include="App_Data\draftdb.sdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\remove.png" />
     <Content Include="Global.asax" />
     <EmbeddedResource Include="Mappings\Draft.hbm.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

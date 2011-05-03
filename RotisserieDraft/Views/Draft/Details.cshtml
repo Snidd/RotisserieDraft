@@ -9,7 +9,7 @@
         $('#DraftMemberPicks-' + memberId).toggle(200);
     }
 
-    function testMethod(result) {
+    function pickComplete(result) {
         
         var jsonResult = eval('(' + result.response + ')');
 
@@ -17,44 +17,137 @@
 
             var dvm = jsonResult.updatedDvm;
 
-            $('.draftmember-box-futurepick').remove();
-
-            for (var i = 0; i < dvm.FuturePicks.length; i++) {
-                $('#draftheader').after('<div class="draftmember-box-futurepick" id="DraftMemberFuturePickBox">' + dvm.FuturePicks[i] + '</div>');
-            }
+            updatePage(dvm);
         }
         else {
-            alert('failure! ' + jsonResult.reason);
+            if (jsonResult.alternatives != null && jsonResult.alternatives.length > 0) {
+                alert(jsonResult.alternatives.length);
+            }
+            showErrorMessage(jsonResult.reason);
         }
+    }
+
+    function showErrorMessage(message) {
+        $('#errormessage').text(message);
+        $('#errormessage').css("visibility", "visible");
+        setTimeout(hideErrorMessage, 5000);
+    }
+
+    function hideErrorMessage() {
+        $('#errormessage').css("visibility", "hidden");
+    }
+
+    function refreshView(result) {
+        var jsonDvm = eval('(' + result.response + ')');
+        updatePage(jsonDvm);
+    }
+
+    function addRemoveButtonsToFuturePicks() {
+        $('.draftmember-box-futurepick').mouseenter(fpEnter).mouseleave(fpLeave);
+    }
+
+    function removePick(cardName) {
+        // In the future, try to remove the futurepick immediatly, cant get it to work now. None of these work, they all update all the divs.
+        //$("div:contains('" + cardName.toString() + "')").css("text-decoration", "underline");
+        //$("div:contains(Daze)").css("text-decoration", "underline");
+        //$("div:contains('Daze')").css("text-decoration", "underline");
+        //$("div:contains('Daze')").css("text-decoration", "underline");
+
+        $("div:contains(" + cardName + "):not(:has(div))").css("text-decoration", "underline");
+
+        $.ajax({
+            type: "POST",
+            url: "/Draft/RemovePick/@Model.Id",
+            data: "cardName=" + cardName,
+            success: function (result) {
+                if (result != null && result.success != null && result.success) {
+                    updatePage(result.dvm);
+                }
+            }
+        });
+    }
+
+    function fpEnter(futurepick) {
+        $(futurepick.currentTarget)
+            .append('<div id="removefpimage" class="rightalign"><input type="image" src="/Content/Images/remove.png" onclick="removePick(\'' + futurepick.currentTarget.innerText + '\')" /></div>');
+    }
+
+    function fpLeave(futurepick) {
+        $('#removefpimage').remove();
+    }
+
+    function updatePage(dvm) {
+        $('.draftmember-box-futurepick').remove();
+
+        for (var i = 0; i < dvm.FuturePicks.length; i++) {
+            $('#errormessage').after('<div class="draftmember-box-futurepick" id="DraftMemberFuturePickBox">' + dvm.FuturePicks[i] + '</div>');
+        }
+
+        $('.draftmember-box-future').remove();
+        $('.draftmember-box-current').remove();
+        $('.draftmember-box-history').remove();
+
+        var afterObject = $('#picksAfterThis');
+
+        for (var i = 0; i < dvm.Picks.length; i++) {
+            var pick = dvm.Picks[i];
+
+            var cssStyle = "draftmember-box-history";
+            var pickBox = "";
+
+            if (pick.PickTime == 0) {
+                cssStyle = "draftmember-box-current";
+            } else if (pick.PickTime == 1) {
+                cssStyle = "draftmember-box-future";
+            } else if (pick.PickTime == -1) {
+                pickBox = '<div class="draftmember-box-history" id="DraftMemberPickBox"><p class="pick-cardname">' + pick.CardName + '</p></div>';
+            }
+
+            afterObject = afterObject.before('<div class="' + cssStyle + '" id="DraftMemberBox"><p class="draftmember-name">' + pick.MemberName + '</p></div>' + pickBox +'<div style="clear: both"></div>');
+        }
+
+        addRemoveButtonsToFuturePicks();
+    }
+
+    $(document).ready(initializeDocument);
+
+    function initializeDocument() {
+        addRemoveButtonsToFuturePicks();
     }
 
 </script>
 
-<h2 id="draftheader">@Model.Name</h2>
+<div id="errormessage">Wrong something!</div>
 
 @foreach (var fp in Model.FuturePicks)
 {
     <div class="draftmember-box-futurepick" id="DraftMemberFuturePickBox">@fp</div>
 }
-
-@using (Ajax.BeginForm("Pick", "Draft", new AjaxOptions() { OnComplete = "testMethod", HttpMethod = "Post" } ))
+@if (Model.IsMemberOfDraft)
 {
-    @Html.Hidden("draftId", Model.Id);
-    @Html.TextBox("cardName")
-    <input type="submit" id="pickcard" value="Pick card!" />    
+    using (Ajax.BeginForm("Pick", "Draft", new AjaxOptions() { OnComplete = "pickComplete", HttpMethod = "Post" }))
+    {
+        @Html.Hidden("draftId", Model.Id);
+        @Html.TextBox("cardName")
+        <input type="submit" id="pickcard" value="Pick card!" />
+    }
 }
-
+@using (Ajax.BeginForm("Details", "Draft", new { id = Model.Id }, new AjaxOptions() { OnComplete = "refreshView", HttpMethod = "Get" }))
+{
+    <input type="submit" value="Refresh"/>
+}
+    <div id="picksAfterThis"></div>
 @foreach (var p in Model.Picks)
 {
-    <div class="draftmember-box-@p.PickTime.ToString().ToLower()" id="DraftMemberBox-@p.MemberId">
+    <div class="draftmember-box-@p.PickTime.ToString().ToLower()" id="DraftMemberBox">
         <p class="draftmember-name">@p.MemberName</p>
     </div>
-    if (p.PickTime == RotisserieDraft.ViewModels.PickTime.History)
-    {
-        <div class="draftmember-box-history" id="PickBox-@p.MemberId">
+                               if (p.PickTime == RotisserieDraft.ViewModels.PickTime.History)
+                               {
+        <div class="draftmember-box-history" id="DraftMemberPickBox">
             <p class="pick-cardname">@p.CardName</p>
         </div>
-    }
+                               }
     <div style="clear: both"></div>
 }
 <p>
@@ -87,6 +180,51 @@
                 <div class="display-label">Created</div>
                 <div class="display-field">@String.Format("{0:g}", Model.CreationDate)</div>
             </td>
+            <td>
+                <div class="display-label">Name</div>
+                <div class="display-field">@Model.Name</div>
+            </td>
         </tr>
     </table>
 </fieldset>
+
+@section chatwindow {
+    <script type="text/ecmascript" language="ecmascript">
+        var chatWindowOpen = false;
+        function toggleExpandChatWindow() {
+            if (!chatWindowOpen) {
+                $('#chatwindow').animate({
+                    width: '+=200'
+                }, 600, function () {
+                    $('#chatcontent').show();
+                });
+
+                $('#chatexpandbutton').attr("src", "../../Content/Images/collapse_arrows.png");
+
+                chatWindowOpen = true;
+            }
+            else {
+                $('#chatcontent').hide();
+
+                $('#chatwindow').animate({
+                    width: '-=200'
+                }, 600, function () {
+                });
+
+                $('#chatexpandbutton').attr("src", "../../Content/Images/expand_arrows.png");
+                
+
+                chatWindowOpen = false;
+            }
+        }
+    </script>
+    <div id="chatwindow"><input id="chatexpandbutton" type="image" src="../../Content/Images/expand_arrows.png" onclick="toggleExpandChatWindow()" />
+        <div id="chatcontent">
+            <p class="chatrow"><span class="chatname">Snidd:</span><span class="chattext">lite chat</span></p>
+            <p class="chatrow"><span class="chatname">Snidd:</span><span class="chattext">jag tror en Ancestrall recall vore nice</span></p>
+            <p class="chatrow"><span class="chatname">Mats:</span><span class="chattext">how about Necropotence!?</span></p>
+            <p class="chatrow"><span class="chatname">Rikard:</span><span class="chattext">Jag gillar Sol ring</span></p>
+            <input type="text" class="chatinput" />
+        </div>
+    </div>
+}

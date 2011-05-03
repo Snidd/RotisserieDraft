@@ -21,6 +21,8 @@ namespace RotisserieDraft.ViewModels
             FuturePicks = new List<string>();
         }
 
+		public bool IsMemberOfDraft { get; set; }
+
         public int Id { get; set; }
         public List<DraftMemberVm> Members { get; set; }
         public string Name { get; set; }

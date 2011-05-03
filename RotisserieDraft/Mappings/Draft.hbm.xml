@@ -78,6 +78,16 @@
     <many-to-one name="Card" column="CardId" unique-key="DraftCardUnique"/>
   </class>
 
+  <class name="Chat">
+    <id name="Id" column="ChatId" type="Int32">
+      <generator class="native"></generator>
+    </id>
+    <property name="CreatedDate" type="DateTime" not-null="true"/>
+    <property name="Text" type="String"/>
+    <many-to-one name="Member" column="MemberId" />
+    <many-to-one name="Draft" column="DraftId"/>
+  </class>
+  
   <class name="FuturePick">
     <id name="Id" column="FuturePickId" type="Int32">
       <generator class="native"></generator>

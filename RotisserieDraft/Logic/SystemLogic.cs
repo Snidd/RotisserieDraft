@@ -11,6 +11,37 @@ namespace RotisserieDraft.Logic
 {
     public class SystemLogic : IDisposable
     {
+
+		public void AddChat(string message, int draftId, int memberId)
+		{
+			IChatRepository cr = new ChatRepository();
+			IDraftRepository dr = new DraftRepository();
+			IMemberRepository mr = new MemberRepository();
+
+			var draft = dr.GetById(draftId);
+			var member = mr.GetById(memberId);
+
+			var chat = new Chat() {Draft = draft, Member = member, Text = message};
+
+			cr.Add(chat);
+		}
+
+		public List<Chat> GetChatList(int draftId)
+		{
+			IChatRepository cr = new ChatRepository();
+			IDraftRepository dr = new DraftRepository();
+
+			var draft = dr.GetById(draftId);
+			var res = cr.ListByDraft(draft);
+
+			return res != null ? res.ToList() : new List<Chat>();
+		}
+
+		public void RemoveChat(int chatId)
+		{
+			throw new NotImplementedException("Not yet!");
+		}
+
         public Member FindMember(string memberIdentification)
         {
             IMemberRepository mr = new MemberRepository();
@@ -31,7 +62,7 @@ namespace RotisserieDraft.Logic
             IMemberRepository mr = new MemberRepository();
             
             string passwordHash = FormsAuthentication.HashPasswordForStoringInConfigFile(
-                                      password, "sha1");
+                                      password+username, "sha1");
 
             var member = new Member {UserName = username, Email = email, Password = passwordHash, FullName = fullname};
 
@@ -54,7 +85,7 @@ namespace RotisserieDraft.Logic
             if (member == null)
                 return false;
 
-            string passwordHash = FormsAuthentication.HashPasswordForStoringInConfigFile(password, "sha1");
+            string passwordHash = FormsAuthentication.HashPasswordForStoringInConfigFile(password+username, "sha1");
             return member.Password == passwordHash;
         }
 

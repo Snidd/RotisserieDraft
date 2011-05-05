@@ -185,6 +185,91 @@ namespace RotisserieDraft.Controllers
             }
         }
 
+		[Authorize]
+		public ActionResult UpdateChat(int id, int lastChatId)
+		{
+			var member = GetAuthorizedMember();
+
+			using (var sl = new SystemLogic())
+			{
+				if (!sl.IsMemberOfDraft(member.Id, id))
+				{
+					if (Request.IsAjaxRequest()) return Json(new {success = false});
+					return RedirectToAction("Index");
+				}
+
+				var newChats = ConvertToChatViewModelList(sl.GetUpdatedChatList(id, lastChatId), member.Id);
+
+				if (Request.IsAjaxRequest()) return Json(new { success = true, chats = newChats });
+				return RedirectToAction("Details", new { id = id });
+			}
+		}
+
+		private List<ChatViewModel> ConvertToChatViewModelList(IEnumerable<Chat> chatlist, int currentMemberId)
+		{
+			using (var sl = new SystemLogic())
+			{
+				var vmchats = new List<ChatViewModel>();
+				foreach (Chat chat in chatlist)
+				{
+					var chatmember = sl.GetMember(chat.Member.Id);
+					var cvm = new ChatViewModel
+					{
+						ChatId = chat.Id,
+						DateTime = chat.CreatedDate.ToString("HH:mm"),
+						MemberName = currentMemberId == chatmember.Id ? "Me" : chatmember.FullName,
+						Text = chat.Text
+					};
+					vmchats.Add(cvm);
+				}
+
+				return vmchats;
+			}
+		}
+
+		[Authorize]
+		public ActionResult ListChat(int id)
+		{
+			var member = GetAuthorizedMember();
+
+			using (var sl = new SystemLogic())
+			{
+				if (!sl.IsMemberOfDraft(member.Id, id))
+				{
+					if (Request.IsAjaxRequest()) return Json(new { success = false });
+					return RedirectToAction("Index");
+				}
+
+				var chats = sl.GetChatList(id);
+
+				var vmchats = ConvertToChatViewModelList(chats, member.Id);
+
+				if (Request.IsAjaxRequest()) return Json(new { success = true, chats = vmchats });
+				return RedirectToAction("Details", new { id = id });
+			}
+		}
+
+		[Authorize]
+		[HttpPost]
+		public ActionResult Chat(int draftId, string message, int chatTempId)
+		{
+			var member = GetAuthorizedMember();
+
+			using (var sl = new SystemLogic())
+			{
+				if (!sl.IsMemberOfDraft(member.Id, draftId))
+				{
+					if (Request.IsAjaxRequest()) return Json(new {success = false});
+					return RedirectToAction("Index");
+				}
+
+				var chat = sl.AddChat(message, draftId, member.Id);
+
+				if (Request.IsAjaxRequest()) return Json(new {success = true, chatId = chat.Id, oldChatId = chatTempId});
+				return RedirectToAction("Details", new {id = draftId});
+			}
+		}
+
 		/// <summary>
 		/// Removes a pick for the authorized member, for now only removes from futurepicks, will be extended later with possibility to remove a pick if next player hasnt picked.
 		/// </summary>
@@ -195,8 +280,6 @@ namespace RotisserieDraft.Controllers
 		public ActionResult RemovePick(int id, string cardName)
 		{
 			var member = GetAuthorizedMember();
-
-			if (!Request.IsAjaxRequest()) return RedirectToAction("Index");
 
 			using (var sl = new SystemLogic())
 			{

@@ -419,9 +419,22 @@ div#chatwindow
     background: #eeeeee;    
 }
 
+div#chatsubmit
+{
+    display: none;
+    position: absolute;
+    bottom: 0px;
+}
+
 div#chatcontent
 {
     display: none;
+    position: absolute;
+    top: 36px;
+    bottom: 70px;
+    right: 0px;
+    left: 0px;
+    overflow: scroll;
 }
 
 p.chatrow
@@ -435,6 +448,13 @@ span.chatname
     margin: 0em 1em 0em 0em;
 }
 
+span.chattime
+{
+    font-weight: bold;
+    margin: 0em 0.5em 0em 0em;
+    color: #999999;
+}
+
 span.chattext
 {
     color: #000000;
@@ -442,7 +462,7 @@ span.chattext
 
 input.chatinput
 {
-    margin: 2em 1em 0em 1em;
+    margin: 2em 1em 2em 1em;
 }
 
 /* Styles for validation helpers

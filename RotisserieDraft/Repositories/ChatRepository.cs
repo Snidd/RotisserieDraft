@@ -15,6 +15,7 @@ namespace RotisserieDraft.Repositories
 		public void Add(Chat chat)
 		{
 			chat.CreatedDate = DateTime.Now;
+
 			using (ISession session = NHibernateHelper.OpenSession())
 			using (ITransaction transaction = session.BeginTransaction())
 			{
@@ -40,6 +41,21 @@ namespace RotisserieDraft.Repositories
 				var chats = session
 					.CreateCriteria(typeof (Chat))
 					.Add(Restrictions.Eq("Draft", draft))
+					.AddOrder(Order.Asc("CreatedDate"))
+					.List<Chat>();
+				return chats;
+			}
+		}
+
+		public ICollection<Chat> ListNewChatsFromDraft(Draft draft, int latestChatId)
+		{
+			using (var session = NHibernateHelper.OpenSession())
+			{
+				var chats = session
+					.CreateCriteria(typeof (Chat))
+					.Add(Restrictions.Eq("Draft", draft))
+					.Add(Restrictions.Gt("Id", latestChatId))
+					.AddOrder(Order.Asc("CreatedDate"))
 					.List<Chat>();
 				return chats;
 			}

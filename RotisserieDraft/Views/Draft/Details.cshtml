@@ -4,6 +4,17 @@
     ViewBag.Title = Model.Name;
 }
 <script type="text/ecmascript" language="ecmascript">
+
+    function getParameterByName(name, fromValue) {
+        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+        var regexS = "[\\?&]" + name + "=([^&#]*)";
+        var regex = new RegExp(regexS);
+        var results = regex.exec(fromValue);
+        if (results == null)
+            return "";
+        else
+            return decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
     
     function togglePickList(memberId) {
         $('#DraftMemberPicks-' + memberId).toggle(200);
@@ -189,42 +200,163 @@
 </fieldset>
 
 @section chatwindow {
-    <script type="text/ecmascript" language="ecmascript">
-        var chatWindowOpen = false;
-        function toggleExpandChatWindow() {
-            if (!chatWindowOpen) {
-                $('#chatwindow').animate({
-                    width: '+=200'
-                }, 600, function () {
-                    $('#chatcontent').show();
-                });
+    @if (Request.IsAuthenticated)
+    {
+        <script type="text/ecmascript" language="ecmascript">
+            var chatWindowOpen = false;
 
-                $('#chatexpandbutton').attr("src", "../../Content/Images/collapse_arrows.png");
+            function toggleExpandChatWindow() {
+                if (!chatWindowOpen) {
+                    startGetEntireChatList();
+                    $('#chatwindow').animate({
+                        width: '25%'
+                    }, 600, function () {
+                        $('#chatcontent').show();
+                        $('#chatsubmit').show();
+                    });
 
-                chatWindowOpen = true;
-            }
-            else {
-                $('#chatcontent').hide();
+                    $('#chatexpandbutton').attr("src", "../../Content/Images/collapse_arrows.png");
 
-                $('#chatwindow').animate({
-                    width: '-=200'
-                }, 600, function () {
-                });
+                    chatWindowOpen = true;
+                }
+                else {
+                    $('#chatcontent').hide();
+                    $('#chatsubmit').hide();
 
-                $('#chatexpandbutton').attr("src", "../../Content/Images/expand_arrows.png");
+                    $('#chatwindow').animate({
+                        width: '34'
+                    }, 600, function () {
+                    });
+
+                    $('#chatexpandbutton').attr("src", "../../Content/Images/expand_arrows.png");
                 
 
-                chatWindowOpen = false;
+                    chatWindowOpen = false;
+                }
             }
-        }
-    </script>
-    <div id="chatwindow"><input id="chatexpandbutton" type="image" src="../../Content/Images/expand_arrows.png" onclick="toggleExpandChatWindow()" />
-        <div id="chatcontent">
-            <p class="chatrow"><span class="chatname">Snidd:</span><span class="chattext">lite chat</span></p>
-            <p class="chatrow"><span class="chatname">Snidd:</span><span class="chattext">jag tror en Ancestrall recall vore nice</span></p>
-            <p class="chatrow"><span class="chatname">Mats:</span><span class="chattext">how about Necropotence!?</span></p>
-            <p class="chatrow"><span class="chatname">Rikard:</span><span class="chattext">Jag gillar Sol ring</span></p>
-            <input type="text" class="chatinput" />
+
+            function startGetEntireChatList() {
+                $.ajax({
+                    type: "POST",
+                    url: "/Draft/ListChat/@Model.Id",
+                    data: "draftId=1",
+                    success: function (result) {
+                        if (result != null && result.success != null && result.success) {
+                            drawEntireChatList(result.chats);
+                        }
+                    },
+                    error: function (result, textStatus, errorThrown) {
+                        alert("Error: " + textStatus);
+                    }
+                });
+            }
+
+            function drawEntireChatList(chatList) {
+                var output = "";
+
+                $('.chatrow').remove();
+
+                for (var i = 0; i < chatList.length; i++) {
+                    addChatRow(chatList[i].ChatId,chatList[i].DateTime,chatList[i].MemberName,chatList[i].Text);
+                }
+
+                setChatScrollAtBottom();
+
+                setTimeout(startUpdateChatList, 6000);
+            }
+
+            function setChatScrollAtBottom() {
+                var objDiv = document.getElementById("chatcontent");
+                objDiv.scrollTop = objDiv.scrollHeight;
+            }
+
+            function updateChatList(newChats) {
+
+                var updatedChats = false;
+                for (var i = 0; i < newChats.length; i++) {
+                    addChatRow(newChats[i].ChatId, newChats[i].DateTime, newChats[i].MemberName, newChats[i].Text);
+                    updatedChats = true;
+                }
+
+                if (updatedChats) {
+                    setChatScrollAtBottom();
+                }
+
+                if (chatWindowOpen) {
+                    setTimeout(startUpdateChatList, 3000);
+                }
+            }
+
+            function startUpdateChatList() {
+                var lastChatId = $('.chatrow:last').attr("id");
+
+                lastChatId = lastChatId.substring(4);
+
+                if (lastChatId * 1 < 0)
+                    return;
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Draft/UpdateChat/@Model.Id",
+                    data: "lastChatId=" + lastChatId,
+                    success: function (result) {
+                        if (result != null && result.success != null && result.success) {
+                            updateChatList(result.chats);
+                        }
+                    },
+                    error: function (result, textStatus, errorThrown) {
+                        alert("Something went wrong when updating chatlist!");
+                        setTimeout(startUpdateChatList, 15000);
+                    }
+                });
+
+
+            }
+
+            function addChatRow(id, datetime, name, text)
+            {
+                $('#chatcontent').append('<p id="chat' + id + '" class="chatrow"><span class="chattime">[' + datetime + ']</span><span class="chatname">' + name + ':</span><span class="chattext">' + text + '</span></p>');                    
+            }
+
+            function chatAddComplete(result) {
+                var jsonResult = eval('(' + result.response + ')');
+
+                if (jsonResult.success != null && jsonResult.success) {
+                    $('#chat' + jsonResult.oldChatId).attr("id", "chat" + jsonResult.chatId);
+                } else {
+                    $('#chat' + jsonResult.oldChatId).remove();
+                }
+            }
+
+            function chatAddStart(result, test, test) {
+                var randomnumber = -Math.floor(Math.random() * 1000)
+
+                var message = getParameterByName("message", this.data);
+                var now = new Date();
+
+                addChatRow(randomnumber, now.getHours() + ":" + now.getMinutes(), "Me", message);
+
+                setChatScrollAtBottom();
+
+                this.data += "&chatTempId=" + randomnumber;
+
+                $('#chatinputid').attr("value", "");
+            }
+        </script>
+        <div id="chatwindow"><input id="chatexpandbutton" type="image" src="../../Content/Images/expand_arrows.png" onclick="toggleExpandChatWindow()" />
+            <div id="chatcontent">
+                <p id="chat1" class="chatrow"><span class="chattime">[20:13]</span><span class="chatname">Snidd:</span><span class="chattext">lite chat</span></p>
+                <p id="chat2" class="chatrow"><span class="chattime">20:13</span><span class="chatname">Snidd:</span><span class="chattext">jag tror en Ancestrall recall vore nice, jag tror en Ancestrall recall vore nice, jag tror en Ancestrall recall vore nice</span></p>
+                <p id="chat3" class="chatrow"><span class="chatname">Mats:</span><span class="chattext">how about Necropotence!?</span></p>
+            </div>
+            <div id="chatsubmit">
+                @using (Ajax.BeginForm("Chat", "Draft", new AjaxOptions() { OnBegin = "chatAddStart", OnComplete = "chatAddComplete", HttpMethod = "Post" }))
+                {
+                    @Html.Hidden("draftId", Model.Id);
+                    @Html.TextBox("message", "", new { @class = "chatinput", @id = "chatinputid" });
+                    <input type="submit" id="chatsubmit" value="Send" />
+                }
+            </div>
         </div>
-    </div>
+    }
 }

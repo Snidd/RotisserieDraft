@@ -108,6 +108,7 @@
     <Compile Include="Repositories\PickRepository.cs" />
     <Compile Include="Util\CardExtenderUtils.cs" />
     <Compile Include="ViewModels\AccountViewModel.cs" />
+    <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\CreateDraftViewModel.cs" />
     <Compile Include="ViewModels\DraftListViewModel.cs" />
     <Compile Include="ViewModels\DraftMemberViewModel.cs" />
@@ -119,6 +120,8 @@
     <Content Include="App_Data\draftdb.sdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\collapse_arrows.png" />
+    <Content Include="Content\Images\expand_arrows.png" />
     <Content Include="Content\Images\remove.png" />
     <Content Include="Global.asax" />
     <EmbeddedResource Include="Mappings\Draft.hbm.xml">

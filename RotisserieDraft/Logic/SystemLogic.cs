@@ -12,7 +12,7 @@ namespace RotisserieDraft.Logic
     public class SystemLogic : IDisposable
     {
 
-		public void AddChat(string message, int draftId, int memberId)
+		public Chat AddChat(string message, int draftId, int memberId)
 		{
 			IChatRepository cr = new ChatRepository();
 			IDraftRepository dr = new DraftRepository();
@@ -24,6 +24,8 @@ namespace RotisserieDraft.Logic
 			var chat = new Chat() {Draft = draft, Member = member, Text = message};
 
 			cr.Add(chat);
+
+			return chat;
 		}
 
 		public List<Chat> GetChatList(int draftId)
@@ -33,6 +35,17 @@ namespace RotisserieDraft.Logic
 
 			var draft = dr.GetById(draftId);
 			var res = cr.ListByDraft(draft);
+
+			return res != null ? res.ToList() : new List<Chat>();
+		}
+
+		public List<Chat> GetUpdatedChatList(int draftId, int latestChatId)
+		{
+			IChatRepository cr = new ChatRepository();
+			IDraftRepository dr = new DraftRepository();
+
+			var draft = dr.GetById(draftId);
+			var res = cr.ListNewChatsFromDraft(draft, latestChatId);
 
 			return res != null ? res.ToList() : new List<Chat>();
 		}

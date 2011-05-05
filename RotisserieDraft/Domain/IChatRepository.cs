@@ -12,5 +12,6 @@ namespace RotisserieDraft.Domain
 		void Remove(Chat chat);
 
 		ICollection<Chat> ListByDraft(Draft draft);
+		ICollection<Chat> ListNewChatsFromDraft(Draft draft, int latestChatId);
 	}
 }

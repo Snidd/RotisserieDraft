@@ -35,6 +35,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PublishDatabases>false</PublishDatabases>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Iesi.Collections">
@@ -111,6 +112,7 @@
     <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\CreateDraftViewModel.cs" />
     <Compile Include="ViewModels\DraftListViewModel.cs" />
+    <Compile Include="ViewModels\DraftMemberPickViewModel.cs" />
     <Compile Include="ViewModels\DraftMemberViewModel.cs" />
     <Compile Include="ViewModels\DraftViewModel.cs" />
     <Compile Include="ViewModels\PickViewModel.cs" />

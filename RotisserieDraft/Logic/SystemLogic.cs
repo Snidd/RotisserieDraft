@@ -246,6 +246,19 @@ namespace RotisserieDraft.Logic
             return ret == null ? new List<Pick>() : ret.ToList();
         }
 
+		public List<Pick> GetPickList(int draftId, int memberId)
+		{
+			IPickRepository pickRepository = new PickRepository();
+			IDraftRepository dr = new DraftRepository();
+			IMemberRepository mr = new MemberRepository();
+
+			var draft = dr.GetById(draftId);
+			var member = mr.GetById(memberId);
+
+			var ret = pickRepository.GetPicksByDraftAndMember(draft, member);
+			return ret == null ? new List<Pick>() : ret.ToList();
+		}
+
         public List<Draft> GetDraftList()
         {
             IDraftRepository dr = new DraftRepository();

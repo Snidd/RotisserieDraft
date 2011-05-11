@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using RotisserieDraft.Logic;
 using RotisserieDraft.Models;
 using RotisserieDraft.ViewModels;
+using RotisserieDraft.Util;
 
 namespace RotisserieDraft.Controllers
 {
@@ -32,6 +33,79 @@ namespace RotisserieDraft.Controllers
         {
             return View(GetDraftViewModel(id));
         }
+
+		public ActionResult MemberStatistics(int draftId, int memberId)
+		{
+			using (var sl = new SystemLogic())
+			{
+				var draft = sl.GetDraftById(draftId);
+				
+				if (!draft.Public)
+				{
+					var member = GetAuthorizedMember();
+					if (member == null || !sl.IsMemberOfDraft(member.Id, draftId))
+					{
+						if (Request.IsAjaxRequest()) return Json(new {success = false});
+							
+						return RedirectToAction("Index");
+					}
+				}
+
+				var res = new DraftMemberPickViewModel();
+
+				var pickList = sl.GetPickList(draftId, memberId);
+
+				int artifactPicks = 0;
+				int bluePicks = 0;
+				int redPicks = 0;
+				int whitePicks = 0;
+				int greenPicks = 0;
+				int blackPicks = 0;
+				int landPicks = 0;
+
+				res.NumberOfPicks = pickList.Count;
+
+				foreach (var pick in pickList)
+				{
+					var card = sl.GetCard(pick.Card.Id);
+					
+					res.Picks.Add(card.Name);
+
+					if (card.IsBlack()) blackPicks++;
+					if (card.IsGreen()) greenPicks++;
+					if (card.IsRed()) redPicks++;
+					if (card.IsBlue()) bluePicks++;
+					if (card.IsWhite()) whitePicks++;
+					if (card.IsArtifact()) artifactPicks++;
+					if (card.IsLand()) landPicks++;
+
+					int convertedManaCost = card.GetConvertedManaCost();
+					while (convertedManaCost >= res.ManaCurve.Count)
+					{
+						res.ManaCurve.Add(0);
+					}
+					res.ManaCurve[convertedManaCost]++;
+				}
+
+				if (landPicks > 0) res.ColorPercentages.Add(GetPercentageText("Lands", landPicks, res.NumberOfPicks));
+				if (greenPicks > 0) res.ColorPercentages.Add(GetPercentageText("Green", greenPicks, res.NumberOfPicks));
+				if (redPicks > 0) res.ColorPercentages.Add(GetPercentageText("Red", redPicks, res.NumberOfPicks));
+				if (bluePicks > 0) res.ColorPercentages.Add(GetPercentageText("Blue", bluePicks, res.NumberOfPicks));
+				if (blackPicks > 0) res.ColorPercentages.Add(GetPercentageText("Black", blackPicks, res.NumberOfPicks));
+				if (whitePicks > 0) res.ColorPercentages.Add(GetPercentageText("White", whitePicks, res.NumberOfPicks));
+				if (artifactPicks > 0) res.ColorPercentages.Add(GetPercentageText("Artifacts", artifactPicks, res.NumberOfPicks));
+
+				return Json(new {success = true, result = res});
+			}
+		}
+
+		private static string GetPercentageText(string type, int picksOfTheType, int totalPicks)
+		{
+			double percentage = picksOfTheType/totalPicks*100;
+			percentage = Math.Round(percentage, 1);
+
+			return type + ": " + picksOfTheType + "(" + percentage + ")";
+		}
 
         public ActionResult Index()
         {

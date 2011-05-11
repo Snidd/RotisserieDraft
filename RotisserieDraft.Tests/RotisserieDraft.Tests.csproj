@@ -68,6 +68,7 @@
     <Compile Include="Controllers\HomeControllerTest.cs" />
     <Compile Include="Tests\GenerateSchemaTests.cs" />
     <Compile Include="Domain\TestDraftRepository.cs" />
+    <Compile Include="Util\TestCardUtilExtender.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />

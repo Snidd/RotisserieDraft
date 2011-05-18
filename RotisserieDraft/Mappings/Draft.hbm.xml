@@ -10,7 +10,7 @@
     </id>    
     <property name="Name" type="String" />
     <property name="CreatedDate" type="DateTime" not-null="true" />
-    <property name="Public" type="System.Boolean" />
+    <property name="Public" column="PubliclyAvailable" type="System.Boolean" />
     <property name="Started" type="System.Boolean" />
     <property name="Finished" type="System.Boolean" />
     <property name="MaximumPicksPerMember" type="Int32"/>

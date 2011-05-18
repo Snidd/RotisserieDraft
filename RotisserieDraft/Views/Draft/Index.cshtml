@@ -1,17 +1,21 @@
-﻿@model List<RotisserieDraft.ViewModels.DraftListViewModel>
+﻿@model RotisserieDraft.ViewModels.DraftListViewModel
 
 @{
     ViewBag.Title = "Index";
 }
-
-<h2>Index</h2>
-
+<h2>My drafts</h2>
 <ul id="drafts">
-    @foreach (var d in Model)
+    @foreach (var d in Model.MyDrafts)
     {
         <li> @Html.ActionLink(d.Name, "Details", "Draft", new { id = d.Id }, new { }) (Created by @d.CreatorName)</li>
     }
 </ul>
-
+<h2>Other public drafts</h2>
+<ul id="drafts">
+    @foreach (var d in Model.PublicDrafts)
+    {
+        <li> @Html.ActionLink(d.Name, "Details", "Draft", new { id = d.Id }, new { }) (Created by @d.CreatorName)</li>
+    }
+</ul>
 
 

@@ -133,6 +133,7 @@
     <None Include="hibernate.cfg.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="Scripts\jquery.sparkline.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -189,6 +190,7 @@
     <Content Include="Views\Draft\Create.cshtml" />
     <Content Include="Views\Draft\Start.cshtml" />
     <Content Include="Views\Draft\Google.cshtml" />
+    <Content Include="Views\Draft\MemberStatistics.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

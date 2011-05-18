@@ -87,6 +87,7 @@ namespace RotisserieDraft.Controllers
 					res.ManaCurve[convertedManaCost]++;
 				}
 
+                /*
 				if (landPicks > 0) res.ColorPercentages.Add(GetPercentageText("Lands", landPicks, res.NumberOfPicks));
 				if (greenPicks > 0) res.ColorPercentages.Add(GetPercentageText("Green", greenPicks, res.NumberOfPicks));
 				if (redPicks > 0) res.ColorPercentages.Add(GetPercentageText("Red", redPicks, res.NumberOfPicks));
@@ -94,8 +95,60 @@ namespace RotisserieDraft.Controllers
 				if (blackPicks > 0) res.ColorPercentages.Add(GetPercentageText("Black", blackPicks, res.NumberOfPicks));
 				if (whitePicks > 0) res.ColorPercentages.Add(GetPercentageText("White", whitePicks, res.NumberOfPicks));
 				if (artifactPicks > 0) res.ColorPercentages.Add(GetPercentageText("Artifacts", artifactPicks, res.NumberOfPicks));
+                */
 
-				return Json(new {success = true, result = res});
+                if (greenPicks > 0)
+                {                    
+                    res.ColorsSparkLine += greenPicks + ",";
+                    res.ColorsSparkColorArray += "'green',";
+                }
+
+                if (redPicks > 0)
+                {
+                    res.ColorsSparkLine += redPicks + ",";
+                    res.ColorsSparkColorArray += "'red',";
+                }
+
+                if (bluePicks > 0)
+                {
+                    res.ColorsSparkLine += bluePicks + ",";
+                    res.ColorsSparkColorArray += "'blue',";
+                }
+
+                if (blackPicks > 0)
+                {
+                    res.ColorsSparkLine += blackPicks + ",";
+                    res.ColorsSparkColorArray += "'black',";
+                }
+
+                if (whitePicks > 0)
+                {
+                    res.ColorsSparkLine += redPicks + ",";
+                    res.ColorsSparkColorArray += "'white',";
+                }
+
+                if (artifactPicks > 0)
+                {
+                    res.ColorsSparkLine += redPicks + ",";
+                    res.ColorsSparkColorArray += "'brown',";
+                }
+                
+                int count = 0;
+                foreach (int manacurve in res.ManaCurve)
+                {
+                    res.ManaCurveSparkLine += manacurve + ",";
+                    res.ManaCurveDescriptionLine += count + " ";
+                    count++;
+                }
+                
+                res.ManaCurveDescriptionLine = string.IsNullOrEmpty(res.ManaCurveDescriptionLine) ? "" : res.ManaCurveDescriptionLine.Trim();
+                res.ManaCurveSparkLine = string.IsNullOrEmpty(res.ManaCurveSparkLine) ? "" : res.ManaCurveSparkLine.Trim(',');
+                res.ColorsSparkColorArray = string.IsNullOrEmpty(res.ColorsSparkColorArray) ? "" : res.ColorsSparkColorArray.Trim(',');
+                res.ColorsSparkLine = string.IsNullOrEmpty(res.ColorsSparkLine) ? "" : res.ColorsSparkLine.Trim(',');
+
+                if (Request.IsAjaxRequest()) return Json(new {success = true, result = res});
+
+                return View(res);
 			}
 		}
 
@@ -109,33 +162,37 @@ namespace RotisserieDraft.Controllers
 
         public ActionResult Index()
         {
-            var draftList = new List<DraftListViewModel>();
+            var dlvm = new DraftListViewModel();
 
             using (var sl = new SystemLogic())
             {
                 var authMember = GetAuthorizedMember();
 
-                var drafts = sl.GetDraftList();
+                var draftIdsAdded = new List<int>();
+
+                if (authMember != null)
+                {
+                    var myDrafts = sl.GetDraftListFromMember(authMember.Id);
+                    foreach (var draft in myDrafts)
+                    {
+                        var owner = sl.GetMember(draft.Owner.Id);
+                        dlvm.MyDrafts.Add(new DraftListDetails { CreatorId = owner.Id, CreatorName = owner.FullName, Id = draft.Id, Name = draft.Name });
+                        draftIdsAdded.Add(draft.Id);
+                    }
+                }
+
+                var drafts = sl.GetPublicDraftList();
                 foreach (var draft in drafts)
                 {
-                    var dlvm = new DraftListViewModel
-                                   {
-                                       CreatorId = draft.Owner.Id,
-                                       CreatorName = sl.GetMember(draft.Owner.Id).FullName,
-                                       Id = draft.Id,
-                                       Name = draft.Name
-                                   };
-					if (authMember != null)
-					{
-						dlvm.AmIMemberOf = sl.IsMemberOfDraft
-							(authMember.Id, draft.Id);
-					}
-
-                    draftList.Add(dlvm);
+                    if (draftIdsAdded.Contains(draft.Id)) continue;
+                    var owner = sl.GetMember(draft.Owner.Id);
+                    dlvm.PublicDrafts.Add(new DraftListDetails { CreatorId = owner.Id, CreatorName = owner.FullName, Id = draft.Id, Name = draft.Name});
                 }
+
+
             }
 
-            return View(draftList);
+            return View(dlvm);
         }
 
         [Authorize]

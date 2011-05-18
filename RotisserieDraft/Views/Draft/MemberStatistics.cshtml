@@ -1,0 +1,43 @@
+﻿@model RotisserieDraft.ViewModels.DraftMemberPickViewModel
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/jquery-1.4.4.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.sparkline.js")" type="text/ecmascript"></script>
+    <script type="text/ecmascript">
+        $(function () {
+            $('.spark-bar').sparkline('html', { type: 'bar', barColor: 'blue', barWidth: 11, zeroColor: 'white', height: '5em', });
+            $('.spark-colorpie').sparkline('html', { type: 'pie', sliceColors: [@Html.Raw(Model.ColorsSparkColorArray)], height: '5em', });
+        });
+    </script>
+</head>
+
+<body class="statistics-page">
+    @if (Model.Picks.Count == 0)
+    {
+        <br /><br />
+        <p class="statistics-pickrow">This player hasn't picked any cards yet!</p>
+    }
+    <div class="statistics-colors">
+        <p class="spark-colorpie">@Model.ColorsSparkLine,0</p>
+    </div>
+    <div class="statistics-manacurve">
+        <p class="spark-bar">@Model.ManaCurveSparkLine</p>
+        <p class="spark-description">@Model.ManaCurveDescriptionLine</p>
+    </div>
+    <div class="statistics-picklist">
+        @foreach (string card in Model.Picks)
+        {
+            <p class="statistics-pickrow">@card</p>
+        }
+    </div>
+</body>
+</html>

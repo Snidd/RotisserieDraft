@@ -31,6 +31,14 @@ namespace RotisserieDraft.Tests.Util
 			Assert.AreEqual(4, convertedManaCost);
 		}
 
+        [TestMethod]
+        public void CanCalculateSplitConvertedManaCost()
+        {
+            var card = new Card { CastingCost = "1R/1U" };
+            int convertedManaCost = card.GetConvertedManaCost();
+            Assert.AreEqual(4, convertedManaCost);
+        }
+
 		[TestMethod]
 		public void CanCalculateSimpleConvertedManaCost()
 		{

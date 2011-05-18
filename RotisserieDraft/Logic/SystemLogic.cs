@@ -259,11 +259,32 @@ namespace RotisserieDraft.Logic
 			return ret == null ? new List<Pick>() : ret.ToList();
 		}
 
-        public List<Draft> GetDraftList()
+        public List<Draft> GetPublicDraftList()
         {
             IDraftRepository dr = new DraftRepository();
             var ret = dr.ListActive();
             return ret == null ? new List<Draft>() : ret.ToList();
+        }
+
+        public List<Draft> GetDraftListFromMember(int memberId)
+        {
+            IDraftMemberPositionsRepository dmpr = new DraftMemberPositionsRepository();
+            IMemberRepository mr = new MemberRepository();
+            IDraftRepository dr = new DraftRepository();
+
+            var member = mr.GetById(memberId);
+            
+            var draftList = new List<Draft>();
+
+            var draftPositions = dmpr.GetDraftPositionsByMember(member);
+            if (draftPositions == null) return draftList;
+
+            foreach (DraftMemberPositions dmp in draftPositions)
+            {
+                draftList.Add(dr.GetById(dmp.Draft.Id));
+            }
+
+            return draftList;
         }
 
         public void Dispose()

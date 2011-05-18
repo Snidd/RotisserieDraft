@@ -13,7 +13,7 @@ namespace RotisserieDraft.Repositories
 	{
 		public FuturePick FuturePickCard(Draft draft, Member member, Card card)
 		{
-			var pick = new FuturePick() { Draft = draft, Member = member, Card = card };
+			var pick = new FuturePick() { Draft = draft, Member = member, Card = card, CreatedDate = DateTime.Now };
 
 			using (ISession session = NHibernateHelper.OpenSession())
 			using (ITransaction transaction = session.BeginTransaction())

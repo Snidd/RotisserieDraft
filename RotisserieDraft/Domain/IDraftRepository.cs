@@ -15,6 +15,5 @@ namespace RotisserieDraft.Domain
 		ICollection<Draft> GetByName(string name);
 	    ICollection<Draft> List();
 		ICollection<Draft> ListActive();
-
 	}
 }

@@ -46,19 +46,28 @@ namespace RotisserieDraft.Util
 
 		public static int GetConvertedManaCost(this Card card)
 		{
-			int nonNumericChars = 0;
-			var chars = new List<char>(card.CastingCost);
-			foreach (char c in card.CastingCost)
-			{
-				if (Char.IsNumber(c)) continue;
-				chars.Remove(c);
-				nonNumericChars++;
-			}
-			if (chars.Count == 0) return nonNumericChars;
-				
-			var parseString = new string(chars.ToArray());
+            string[] splitCard = card.CastingCost.Split('/');
+            
+            int totalConvertedManaCost = 0;
 
-			return Int32.Parse(parseString) + nonNumericChars;
+            foreach (string castingCost in splitCard)
+            {
+                int nonNumericChars = 0;
+                var chars = new List<char>(castingCost);
+                foreach (char c in castingCost)
+                {
+                    if (Char.IsNumber(c)) continue;
+                    chars.Remove(c);
+                    nonNumericChars++;
+                }
+                if (chars.Count == 0) return nonNumericChars;
+
+                var parseString = new string(chars.ToArray());
+
+                totalConvertedManaCost += Int32.Parse(parseString) + nonNumericChars;
+            }
+
+            return totalConvertedManaCost;
 		}
     }
 }

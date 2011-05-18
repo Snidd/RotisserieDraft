@@ -62,6 +62,7 @@ namespace RotisserieDraft.Repositories
 				var drafts = session
 					.CreateCriteria(typeof(Draft))
 					.Add(Restrictions.Eq("Started", true))
+                    .Add(Restrictions.Eq("Public", true))
 					.List<Draft>();
 				return drafts;
 			}

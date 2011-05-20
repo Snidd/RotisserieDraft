@@ -81,6 +81,7 @@ namespace RotisserieDraft.Repositories
 					.CreateCriteria(typeof(FuturePick))
 					.Add(Restrictions.Eq("Draft", draft))
 					.Add(Restrictions.Eq("Member", member))
+                    .AddOrder(Order.Desc("CreatedDate"))
 					.List<FuturePick>();
 
 				return picks;

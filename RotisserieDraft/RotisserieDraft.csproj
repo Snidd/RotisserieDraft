@@ -122,9 +122,29 @@
     <Content Include="App_Data\draftdb.sdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\bg.png" />
+    <Content Include="Content\Images\br.png" />
+    <Content Include="Content\Images\brg.png" />
     <Content Include="Content\Images\collapse_arrows.png" />
     <Content Include="Content\Images\expand_arrows.png" />
     <Content Include="Content\Images\remove.png" />
+    <Content Include="Content\Images\rg.png" />
+    <Content Include="Content\Images\ub.png" />
+    <Content Include="Content\Images\ubg.png" />
+    <Content Include="Content\Images\ubr.png" />
+    <Content Include="Content\Images\ug.png" />
+    <Content Include="Content\Images\ur.png" />
+    <Content Include="Content\Images\urg.png" />
+    <Content Include="Content\Images\wb.png" />
+    <Content Include="Content\Images\wbg.png" />
+    <Content Include="Content\Images\wbr.png" />
+    <Content Include="Content\Images\wg.png" />
+    <Content Include="Content\Images\wr.png" />
+    <Content Include="Content\Images\wrg.png" />
+    <Content Include="Content\Images\wu.png" />
+    <Content Include="Content\Images\wub.png" />
+    <Content Include="Content\Images\wug.png" />
+    <Content Include="Content\Images\wur.png" />
     <Content Include="Global.asax" />
     <EmbeddedResource Include="Mappings\Draft.hbm.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -133,6 +153,7 @@
     <None Include="hibernate.cfg.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="Scripts\autocard.js" />
     <Content Include="Scripts\jquery.sparkline.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

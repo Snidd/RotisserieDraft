@@ -31,7 +31,7 @@ namespace RotisserieDraft.Controllers
 
         public ActionResult Google(int id)
         {
-            return View(GetDraftViewModel(id));
+            return View(GetDraftViewModel(id, false));
         }
 
 		public ActionResult MemberStatistics(int draftId, int memberId)
@@ -221,13 +221,13 @@ namespace RotisserieDraft.Controllers
                     return Json(new { pickresult = false, reason = "Card was already picked, try another card!" });
                 }
 
-                DraftViewModel dvm = GetDraftViewModel(draftId);
+                DraftViewModel dvm = GetDraftViewModel(draftId, false);
 
                 return Json(new { pickresult = true, updatedDvm = dvm });
             }
         }
 
-        private DraftViewModel GetDraftViewModel(int draftId)
+        private DraftViewModel GetDraftViewModel(int draftId, bool allPicks)
         {
             var draftLogic = GetDraftLogic.FromDraftId(draftId);
             var systemLogic = new SystemLogic();
@@ -269,6 +269,8 @@ namespace RotisserieDraft.Controllers
                 if (startIndex < 0)
                     startIndex = 0;
 
+                if (allPicks) startIndex = 0;
+
                 for (int i = startIndex; i < pickCount; i++)
                 {
                     var pick = picks[i];
@@ -276,7 +278,7 @@ namespace RotisserieDraft.Controllers
                     var member = sl.GetMember(pick.Member.Id);
                     var card = sl.GetCard(pick.Card.Id);
 
-                    var pvm = new PickViewModel { CardId = pick.Card.Id, MemberId = pick.Member.Id, PickTime = PickTime.History, CardName = card.Name, MemberName = member.FullName };
+                    var pvm = new PickViewModel { CardId = pick.Card.Id, MemberId = pick.Member.Id, PickTime = PickTime.History, ColorClass = GetColorClass(card), CardName = card.Name, MemberName = member.FullName };
                     dvm.Picks.Add(pvm);
                 }
 
@@ -314,6 +316,26 @@ namespace RotisserieDraft.Controllers
 
                 return dvm;
             }
+        }
+
+        private string GetColorClass(Card card)
+        {
+            // Follow the color pie (WUBRG)
+
+            string colorClass = "";
+
+            if (card.IsWhite()) colorClass += "w";
+            if (card.IsBlue()) colorClass += "u";
+            if (card.IsBlack()) colorClass += "b";
+            if (card.IsRed()) colorClass += "r";
+            if (card.IsGreen()) colorClass += "g";
+
+            if (card.IsLand()) colorClass = "l";
+            if (card.IsArtifact()) colorClass = "a";
+
+            if (colorClass.Length > 3) colorClass = "gold";
+
+            return "cardcolor" + colorClass;
         }
 
 		[Authorize]
@@ -424,7 +446,7 @@ namespace RotisserieDraft.Controllers
 					if (card.Name.Equals(cardName))
 					{
 						sl.RemoveMyFuturePick(futurePick.Id);
-						return Json(new {dvm = GetDraftViewModel(id), success = true}, JsonRequestBehavior.AllowGet);
+						return Json(new {dvm = GetDraftViewModel(id, false), success = true}, JsonRequestBehavior.AllowGet);
 					}
 				}
 
@@ -432,29 +454,36 @@ namespace RotisserieDraft.Controllers
 			}
 		}
 
-		//
-		// GET: /Draft/Details/5
-		public ActionResult Details(int id)
+        public ActionResult Details(int id, bool allPicks = false)
         {
-            DraftViewModel dvm = GetDraftViewModel(id);
+            DraftViewModel dvm = GetDraftViewModel(id, allPicks);
             if (dvm == null) return RedirectToAction("Index");
 
-			var member = GetAuthorizedMember();
-			if (member != null)
-			{
-				using (var sl = new SystemLogic())
-				{
-					dvm.IsMemberOfDraft = sl.IsMemberOfDraft(member.Id, id);
-				}
-			}
+            var member = GetAuthorizedMember();
+            if (member != null)
+            {
+                using (var sl = new SystemLogic())
+                {
+                    dvm.IsMemberOfDraft = sl.IsMemberOfDraft(member.Id, id);
+                }
+            }
 
-			if (Request.IsAjaxRequest())
-			{
-				return Json(dvm, JsonRequestBehavior.AllowGet);
-			}
+            if (Request.IsAjaxRequest())
+            {
+                return Json(dvm, JsonRequestBehavior.AllowGet);
+            }
 
             return View(dvm);
         }
+
+		//
+		// GET: /Draft/Details/5
+        /*
+		public ActionResult Details(int id)
+        {
+            return Details(id, false);
+        }
+        */
 
         //
         // GET: /Draft/Create

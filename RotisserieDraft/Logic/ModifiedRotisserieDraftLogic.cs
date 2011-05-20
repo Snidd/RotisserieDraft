@@ -60,7 +60,6 @@ namespace RotisserieDraft.Logic
 			{
 				return false;
 			}
-
 		    var picks = pickRepository.GetPicksByDraft(draft);
 
 		    IDraftMemberPositionsRepository dmpr = new DraftMemberPositionsRepository();
@@ -131,10 +130,15 @@ namespace RotisserieDraft.Logic
             IDraftRepository dr = new DraftRepository();
             IMemberRepository mr = new MemberRepository();
             ICardRepository cr = new CardRepository();
+            IPickRepository pr = new PickRepository();
 
             var draft = dr.GetById(draftId);
             var member = mr.GetById(memberId);
             var card = cr.GetById(cardId);
+
+            Pick pick = pr.GetPickByCardAndDraft(card, draft);
+
+            if (pick != null) return false;
 
 			try
 			{

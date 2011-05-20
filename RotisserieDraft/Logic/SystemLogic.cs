@@ -142,8 +142,8 @@ namespace RotisserieDraft.Logic
             var draft = dr.GetById(draftId);
             var card = cr.GetById(cardId);
 
-            var picks = pr.GetPicksByCardAndDraft(card, draft);
-            return picks.Count > 0;
+            var pick = pr.GetPickByCardAndDraft(card, draft);
+            return pick != null;
         }
 
         public List<Pick> GetLatestPicksByPlayer(int draftId, int memberId)

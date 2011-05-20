@@ -301,6 +301,255 @@ table.draftinformation td
     padding: 0px 15px 0px 0px;
 }
 
+/* CARD
+----------------------------------------------------------*/
+a.mtgcard
+{
+	/*color: #000000;*/
+	text-decoration: none;
+}
+
+/* define cardcolors, all will come as cardcolorX where x is the colors of the card, following the color pie (WUBRG) */
+
+div.cardcoloru
+{
+	background-color: #0e19e7;
+}
+a.cardcoloru
+{
+	color: White;
+}
+
+div.cardcolorr
+{
+	background-color: #ba421d;
+}
+a.cardcolorr
+{
+	color: Black;
+}
+
+div.cardcolorb
+{
+	background-color: Black;	
+}
+a.cardcolorb
+{
+	color: White;
+}
+
+div.cardcolorg
+{
+	background-color: #49b830;	
+}
+a.cardcolorg
+{
+	color: White;
+}
+
+div.cardcolorrg
+{
+	background-image: url('/Content/Images/rg.png');
+}
+a.cardcolorrg
+{
+	color: white;
+}
+
+div.cardcolorwr
+{
+	background-image: url('/Content/Images/wr.png');
+}
+a.cardcolorwr
+{
+	color: Black;
+}
+
+div.cardcolorur
+{
+	background-image: url('/Content/Images/ur.png');
+}
+a.cardcolorur
+{
+	color: white;
+}
+
+div.cardcolorbr
+{
+	background-image: url('/Content/Images/br.png');
+}
+a.cardcolorbr
+{
+	color: white;
+}
+
+div.cardcolorwu
+{
+	background-image: url('/Content/Images/wu.png');
+}
+a.cardcolorwu
+{
+	color: Black;
+}
+
+div.cardcolorwb
+{
+	background-image: url('/Content/Images/wb.png');
+}
+a.cardcolorwb
+{
+	color: Black;
+}
+
+div.cardcolorwg
+{
+	background-image: url('/Content/Images/wg.png');
+}
+a.cardcolorwg
+{
+	color: Black;
+}
+
+div.cardcolorub
+{
+	background-image: url('/Content/Images/ub.png');
+}
+a.cardcolorub
+{
+	color: White;
+}
+
+div.cardcolorug
+{
+	background-image: url('/Content/Images/ug.png');
+}
+a.cardcolorug
+{
+	color: White;
+}
+
+div.cardcolorbg
+{
+	background-image: url('/Content/Images/bg.png');
+}
+a.cardcolorbg
+{
+	color: White;
+}
+
+
+div.cardcolorl
+{
+	background-color: #ddd89f;
+}
+a.cardcolorl
+{
+	color: Black;
+}
+
+
+div.cardcolora
+{
+	background-color: #ababab;
+}
+a.cardcolora
+{
+	color: Black;
+}
+
+div.cardcolorwub
+{
+	background-image: url('/Content/Images/wub.png');
+}
+a.cardcolorwub
+{
+	color: Black;
+}
+
+div.cardcolorwur
+{
+	background-image: url('/Content/Images/wur.png');
+}
+a.cardcolorwur
+{
+	color: Black;
+}
+
+div.cardcolorwug
+{
+	background-image: url('/Content/Images/wug.png');
+}
+a.cardcolorwug
+{
+	color: Black;
+}
+
+div.cardcolorubr
+{
+	background-image: url('/Content/Images/ubr.png');
+}
+a.cardcolorubr
+{
+	color: White;
+}
+
+div.cardcolorubg
+{
+	background-image: url('/Content/Images/ubg.png');
+}
+a.cardcolorubg
+{
+	color: White;
+}
+
+div.cardcolorbrg
+{
+	background-image: url('/Content/Images/brg.png');
+}
+a.cardcolorbrg
+{
+	color: White;
+}
+
+div.cardcolorwbg
+{
+	background-image: url('/Content/Images/wbg.png');
+}
+a.cardcolorwbg
+{
+	color: Black;
+}
+
+div.cardcolorurg
+{
+	background-image: url('/Content/Images/urg.png');
+}
+a.cardcolorurg
+{
+	color: White;
+}
+
+div.cardcolorwbr
+{
+	background-image: url('/Content/Images/wbr.png');
+}
+a.cardcolorwbr
+{
+	color: Black;
+}
+
+div.cardcolorgold
+{
+	background-color: gold;
+}
+a.cardcolorgold
+{
+	color: Black;
+}
+
+
+/* define cardcolors, all will come as cardcolorX where x is the colors of the card, following the color pie (WUBRG) */
+
 /* DRAFTMEMBER
 ----------------------------------------------------------*/
 div.draftmember-box-futurepick
@@ -313,12 +562,22 @@ div.draftmember-box-futurepick
     color: #777777;
 }
 
+div.draftmember-box-card
+{
+    border: solid 1px #e8eef4;
+    padding: 0.5em 0.5em 0.5em 0.5em;
+    margin: 1em 2em 0px 0px;
+    width: 300px; 
+    float: left;
+}
+
+
 div.draftmember-box-history
 {
     border: solid 1px #e8eef4;
     padding: 0.5em 0.5em 0.5em 0.5em;
     margin: 1em 2em 0px 0px;
-    background-color: #eeeeee;
+    background-color: #CEF6F5;
     width: 300px; 
     float: left;
     color: #cccccc;
@@ -329,10 +588,22 @@ div.draftmember-box
     border: solid 1px #000000;
     padding: 0.5em 0.5em 0.5em 0.5em;
     margin: 1em 2em 0px 0px;
-    background-color: #cccccc;
+    background-color: red;
     width: 300px; 
     float: left;
     color: #000000;
+}
+
+div#DraftMemberPickBox
+{
+	/*background-color: #CEF6CE;*/
+}
+
+p.pick-cardname
+{
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    color: #0B610B;
 }
 
 div.draftmember-box-current
@@ -340,8 +611,7 @@ div.draftmember-box-current
     border: solid 1px #e8eef4;
     padding: 0.5em 0.5em 0.5em 0.5em;
     margin: 1em 0px 0px 0px;
-    background-color: #C5EDE0;
-    color: #000000;
+    background-color: #58ACFA;
     font-weight: bold;
     width: 300px; 
     float: left;
@@ -352,7 +622,7 @@ div.draftmember-box-future
     border: solid 1px #e8eef4;
     padding: 0.5em 0.5em 0.5em 0.5em;
     margin: 1em 0px 0px 0px;
-    background-color: #eeeeee;
+    background-color: #CEF6F5;
     color: #000000;
     width: 300px; 
     float: left;
@@ -408,13 +678,6 @@ p.draftmember-name
     margin: 0px 0px 0px 0px;
 }
 
-p.pick-cardname
-{
-    padding: 0px 0px 0px 0px;
-    margin: 0px 0px 0px 0px;
-    color: #888888;
-}
-
 li.draftmember-lastpicks
 {
     padding: 0px 0px 0px 0px;
@@ -427,6 +690,12 @@ ul.draftmember-lastpicks
     margin: 0px 0px 0px 1em;
     list-style-type: decimal;
     display: none;
+}
+
+p.actionParagraph
+{
+	padding: 0px 0px 0px 0px;
+    margin: 0.5em 0px 0px 0em;
 }
 
 /* MISC  

@@ -18,5 +18,6 @@ namespace RotisserieDraft.ViewModels
         public int CardId { get; set; }
         public string CardName { get; set; }
         public PickTime PickTime { get; set; }
+        public string ColorClass { get; set; }
     }
 }

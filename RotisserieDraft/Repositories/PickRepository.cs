@@ -96,7 +96,7 @@ namespace RotisserieDraft.Repositories
 			}
 		}
 
-		public ICollection<Pick> GetPicksByCardAndDraft(Card card, Draft draft)
+        public Pick GetPickByCardAndDraft(Card card, Draft draft)
 		{
 			using (ISession session = NHibernateHelper.OpenSession())
 			{
@@ -104,7 +104,7 @@ namespace RotisserieDraft.Repositories
 					.CreateCriteria(typeof(Pick))
 					.Add(Restrictions.Eq("Card", card))
 					.Add(Restrictions.Eq("Draft", draft))
-					.List<Pick>();
+					.UniqueResult<Pick>();
 
 				return picks;
 			}

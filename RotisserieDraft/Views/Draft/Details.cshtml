@@ -3,7 +3,10 @@
 @{
     ViewBag.Title = Model.Name;
 }
+<script src="@Url.Content("~/Scripts/autocard.js")" type="text/ecmascript"></script>
 <script type="text/ecmascript" language="ecmascript">
+
+    var showAllPicks = false;
 
     function getParameterByName(name, fromValue) {
         name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -26,6 +29,9 @@
 
         if (jsonResult.pickresult) {
 
+            showAllPicks = false;
+            updateTogglePicksText();
+
             var dvm = jsonResult.updatedDvm;
 
             updatePage(dvm);
@@ -34,9 +40,11 @@
             if (jsonResult.alternatives != null && jsonResult.alternatives.length > 0) {
                 $('.alternative-link').remove();
                 for (var i = 0; i < jsonResult.alternatives.length; i++) {
-                    $('#alternativelinks').append('<a class="alternative-link" href="javascript:alternativePick(\'' + escape(jsonResult.alternatives[i].Name) + '\')">' + jsonResult.alternatives[i].Name + '</a> ')
+                    var cardName = jsonResult.alternatives[i].Name.replace("'", "\\'");
+                    $('#alternativelinks').append('<a class="alternative-link" href="javascript:alternativePick(\'' + cardName + '\')">' + jsonResult.alternatives[i].Name + '</a> ')
                 }
                 showAlternativePicks();
+                addMouseOverLinks();
             }
             else {
                 showErrorMessage(jsonResult.reason);
@@ -78,6 +86,8 @@
             data: "cardName=" + cardName,
             success: function (result) {
                 if (result != null && result.success != null && result.success) {
+                    showAllPicks = false;
+                    updateTogglePicksText();
                     updatePage(result.dvm);
                 }
             }
@@ -85,8 +95,9 @@
     }
 
     function fpEnter(futurepick) {
+        var cardName = futurepick.currentTarget.innerText.replace("'", "\\'");
         $(futurepick.currentTarget)
-            .append('<div id="removefpimage" class="rightalign"><input type="image" src="/Content/Images/remove.png" onclick="removePick(\'' + futurepick.currentTarget.innerText + '\')" /></div>');
+            .append('<div id="removefpimage" class="rightalign"><input type="image" src="/Content/Images/remove.png" onclick="removePick(\'' + cardName + '\')" /></div>');
     }
 
     function fpLeave(futurepick) {
@@ -97,12 +108,13 @@
         $('.draftmember-box-futurepick').remove();
 
         for (var i = 0; i < dvm.FuturePicks.length; i++) {
-            $('#errormessage').after('<div class="draftmember-box-futurepick" id="DraftMemberFuturePickBox">' + dvm.FuturePicks[i] + '</div>');
+            $('#pickform').before('<div class="draftmember-box-futurepick" id="DraftMemberFuturePickBox">' + dvm.FuturePicks[i] + '</div>');
         }
 
         $('.draftmember-box-future').remove();
         $('.draftmember-box-current').remove();
         $('.draftmember-box-history').remove();
+        $('.draftmember-box-card').remove();
 
         var afterObject = $('#picksAfterThis');
 
@@ -117,13 +129,14 @@
             } else if (pick.PickTime == 1) {
                 cssStyle = "draftmember-box-future";
             } else if (pick.PickTime == -1) {
-                pickBox = '<div class="draftmember-box-history" id="DraftMemberPickBox"><p class="pick-cardname">' + pick.CardName + '</p></div>';
+                pickBox = '<div class="draftmember-box-card ' + pick.ColorClass + '" id="DraftMemberPickBox"><p class="pick-cardname"><a href="../Details/@Model.Id" target="_blank" class="mtgcard ' + pick.ColorClass + '">' + pick.CardName + '</a></p></div>';
             }
 
             afterObject = afterObject.before('<div class="' + cssStyle + '" id="DraftMemberBox"><p class="draftmember-name"><a class="draftmember-statisticslink" href="javascript:showStatistics(this, @Model.Id, ' + pick.MemberId + ')">' + pick.MemberName + '</a></p></div>' + pickBox + '<div style="clear: both"></div>');
         }
 
         addRemoveButtonsToFuturePicks();
+        addMouseOverLinks();
     }
 
     $(document).ready(initializeDocument);
@@ -132,7 +145,8 @@
         addRemoveButtonsToFuturePicks();
         hideStatistics();
         hideAlternativePicks();
-        startAutomaticRefresh();
+        //startAutomaticRefresh();
+        addMouseOverLinks();
     }
 
     function startAutomaticRefresh() {
@@ -143,7 +157,7 @@
         $.ajax({
             type: "POST",
             url: "/Draft/Details/@Model.Id",
-            data: "cardName=",
+            data: "allPicks=" + showAllPicks,
             success: function (result) {
                 if (result != null) {
                     updatePage(result);
@@ -151,6 +165,22 @@
                 startAutomaticRefresh();
             }
         });
+    }
+
+    function toggleAllPicks() {
+        showAllPicks = !showAllPicks;
+        automaticRefresh();
+        updateTogglePicksText();
+    }
+
+    function updateTogglePicksText() {
+        var textOutput = "";
+        if (showAllPicks)
+            textOutput = "Show latest picks only";
+        else
+            textOutput = "Show all picks";
+
+        $('.toggleAllPicksLink').text(textOutput);
     }
 
     function showStatistics(link, draftId, memberId) {
@@ -192,17 +222,14 @@
 }
 @if (Model.IsMemberOfDraft)
 {
-    using (Ajax.BeginForm("Pick", "Draft", new AjaxOptions() { OnComplete = "pickComplete", HttpMethod = "Post" }))
+    using (Ajax.BeginForm("Pick", "Draft", new AjaxOptions() { OnComplete = "pickComplete", HttpMethod = "Post" }, new { id = "pickform"}))
     {
         @Html.Hidden("draftId", Model.Id);
-        @Html.TextBox("cardName", "", new { @id = "cardNameBox"})
+        @Html.TextBox("cardName", "", new { @id = "cardNameBox" })
         <input type="submit" id="pickcard" value="Pick card!" />
     }
 }
-@using (Ajax.BeginForm("Details", "Draft", new { id = Model.Id }, new AjaxOptions() { OnComplete = "refreshView", HttpMethod = "Get" }))
-{
-    <input type="submit" value="Refresh"/>
-}
+    <p class="actionParagraph"><a href="javascript:automaticRefresh();" class="refreshlink">Refresh</a> - <a href="javascript:toggleAllPicks();" class="toggleAllPicksLink">Show all picks</a></p>    
     <div id="statistics-box"><div id="close-box"><a href="javascript:hideStatistics()">Hide</a></div><iframe id="statistics-frame" frameborder="0" height="250" src="../MemberStatistics?draftId=2&memberId=9"></iframe></div>
     
     <div id="picksAfterThis"></div>
@@ -213,8 +240,8 @@
     </div>
                                if (p.PickTime == RotisserieDraft.ViewModels.PickTime.History)
                                {
-        <div class="draftmember-box-history" id="DraftMemberPickBox">
-            <p class="pick-cardname">@p.CardName</p>
+        <div class="draftmember-box-card @p.ColorClass" id="DraftMemberPickBox">
+            <p class="pick-cardname"><a href="../Details/@Model.Id" target="_blank" class="mtgcard @p.ColorClass">@p.CardName</a></p>
         </div>
                                }
     <div style="clear: both"></div>

@@ -18,6 +18,6 @@ namespace RotisserieDraft.Domain
 		ICollection<Pick> GetPicksByDraftAndMember(Draft draft, Member member);
 
 		ICollection<Pick> GetPicksByCard(Card card);
-		ICollection<Pick> GetPicksByCardAndDraft(Card card, Draft draft);
+		Pick GetPickByCardAndDraft(Card card, Draft draft);
 	}
 }

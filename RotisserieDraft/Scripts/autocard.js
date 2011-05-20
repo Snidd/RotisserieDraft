@@ -202,7 +202,7 @@ var wizardsURL = 'http://www.wizards.com/global/images/magic/general/';
 *	Wizards
 */
 function getWizardsCardName(cardName) {
-    return cardName.replace(/&#8217;/g, "").replace(/\/g, "").replace(/\’/g, "").replace(/\'/g, "").replace(/,/g, " ").replace(/-/g, " ").replace(/\s+/g, " ").replace(/ /g, "_");
+    return cardName.replace(/&#8217;/g, "").replace(/\/g, "").replace(/\’/g, "").replace(/\'/g, "").replace(/,/g, " ").replace(/-/g, " ").replace(/\s+/g, " ").replace(/ /g, "_").replace("/", "_");
 }
 function getWizardsHtml(cardName) {
     return "<img src=\"" + wizardsURL + getWizardsCardName(cardName) + ".jpg\" onerror=\"this.onerror=null;this.onmouseout=null;this.onmouseover=null;this.src='mtg_card_back.jpg';\"/>";

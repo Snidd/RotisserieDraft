@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NHibernate;
 using NHibernate.Cfg;
+using System.Linq;
 using NHibernate.Exceptions;
 using NHibernate.Tool.hbm2ddl;
 using RotisserieDraft.Domain;
@@ -55,6 +56,22 @@ namespace RotisserieDraft.Tests.Domain
 				transaction.Commit();
 			}
 		}
+
+        [TestMethod]
+        public void CanGetLatestMembers()
+        {
+            IMemberRepository repository = new MemberRepository();
+            ICollection<Member> members = repository.GetLatestMembers(2);
+
+            Assert.IsNotNull(members);
+
+            var memberList = members.ToList();
+
+            Assert.AreEqual(2, memberList.Count);
+
+            Assert.AreEqual(_members[3].Id, memberList[0].Id);
+            Assert.AreEqual(_members[2].Id, memberList[1].Id);
+        }
 
 		[TestMethod]
 		public void CanAddNewMember()

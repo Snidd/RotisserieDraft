@@ -70,5 +70,18 @@ namespace RotisserieDraft.Repositories
                 return member;
             }
 	    }
+
+        public ICollection<Member> GetLatestMembers(int maxCount)
+        {
+            using (ISession session = NHibernateHelper.OpenSession())
+            {
+                var members = session
+                    .CreateCriteria(typeof(Member))
+                    .SetMaxResults(maxCount)
+                    .AddOrder(Order.Desc("Id"))
+                    .List<Member>();
+                return members;
+            }
+        }
 	}
 }

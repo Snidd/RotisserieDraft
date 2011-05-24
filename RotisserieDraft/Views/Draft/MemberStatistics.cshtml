@@ -11,12 +11,22 @@
     <script src="@Url.Content("~/Scripts/jquery-1.4.4.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery.sparkline.js")" type="text/ecmascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.sparkline.js")" type="text/ecmascript"></script>    
     <script type="text/ecmascript">
         $(function () {
             $('.spark-bar').sparkline('html', { type: 'bar', barColor: 'blue', barWidth: 11, zeroColor: 'white', height: '5em', });
             $('.spark-colorpie').sparkline('html', { type: 'pie', sliceColors: [@Html.Raw(Model.ColorsSparkColorArray)], height: '5em', });
         });
+
+        function getWizardsCardName(cardName) {
+            return cardName.replace(/&#8217;/g, "").replace(/\/g, "").replace(/\’/g, "").replace(/\'/g, "").replace(/,/g, " ").replace(/-/g, " ").replace(/\s+/g, " ").replace(/ /g, "_").replace("/", "_");
+        }
+
+        function showCardWindow(cardName)
+        {
+            var wizardCardName = getWizardsCardName(cardName) + '.jpg';
+            window.open('http://www.wizards.com/global/images/magic/general/' + wizardCardName, 'cardWindow', 'menubar=0, resizable=0,width=202,height=287,location=0,scrollbars=0,status=0');
+        }
     </script>
 </head>
 
@@ -34,9 +44,9 @@
         <p class="spark-description">@Model.ManaCurveDescriptionLine</p>
     </div>
     <div class="statistics-picklist">
-        @foreach (string card in Model.Picks)
+        @foreach (var card in Model.Picks)
         {
-            <p class="statistics-pickrow">@card</p>
+            <div class="statistics-pickrow @card.ColorClass"><a href="javascript:showCardWindow('@card.CardName.Replace("'","\\'")');" class="mtgcard @card.ColorClass">@card.CardName</a></div>
         }
     </div>
 </body>

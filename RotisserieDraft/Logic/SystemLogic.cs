@@ -133,6 +133,14 @@ namespace RotisserieDraft.Logic
             return dr.GetById(draftId);
         }
 
+        public List<Member> GetLatestMembers(int count)
+        {
+            IMemberRepository mr = new MemberRepository();
+
+            var members = mr.GetLatestMembers(count);
+            return members == null ? new List<Member>() : members.ToList();
+        }
+
         public bool IsCardPicked(int draftId, int cardId)
         {
             IPickRepository pr = new PickRepository();

@@ -14,5 +14,6 @@ namespace RotisserieDraft.Domain
 		Member GetById(int memberId);
 		Member GetByEmail(string email);
 	    Member GetByUsername(string username);
+        ICollection<Member> GetLatestMembers(int maxCount);
 	}
 }

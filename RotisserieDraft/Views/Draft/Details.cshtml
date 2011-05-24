@@ -145,7 +145,7 @@
         addRemoveButtonsToFuturePicks();
         hideStatistics();
         hideAlternativePicks();
-        //startAutomaticRefresh();
+        startAutomaticRefresh();
         addMouseOverLinks();
     }
 
@@ -298,6 +298,7 @@
                     }, 600, function () {
                         $('#chatcontent').show();
                         $('#chatsubmit').show();
+                        setChatScrollAtBottom();
                     });
 
                     $('#chatexpandbutton').attr("src", "../../Content/Images/collapse_arrows.png");

@@ -1,4 +1,6 @@
-﻿@{
+﻿@model RotisserieDraft.ViewModels.HomeViewModel
+
+@{
     ViewBag.Title = "Home Page";
 }
 
@@ -6,3 +8,8 @@
 <p>You need to @Html.ActionLink("register", "Register", "Account") a user to use most of the functions.</p>
 <p>@Html.ActionLink("View drafts", "Index", "Draft")</p>
 <p>@Html.ActionLink("Create a draft", "Create", "Draft")</p>
+<p class="latestmembers">Our 5 latest members:</p>
+@foreach (var membername in Model.LatestMembers)
+{
+    <p class="latestmember_row">@membername</p>
+}

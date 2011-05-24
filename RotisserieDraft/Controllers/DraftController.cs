@@ -68,8 +68,9 @@ namespace RotisserieDraft.Controllers
 				foreach (var pick in pickList)
 				{
 					var card = sl.GetCard(pick.Card.Id);
-					
-					res.Picks.Add(card.Name);
+
+                    PickViewModel pvm = new PickViewModel() { ColorClass = GetColorClass(card), CardName = card.Name, CardId = card.Id };
+					res.Picks.Add(pvm);
 
 					if (card.IsBlack()) blackPicks++;
 					if (card.IsGreen()) greenPicks++;

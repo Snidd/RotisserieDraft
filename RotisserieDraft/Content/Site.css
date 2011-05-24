@@ -47,7 +47,6 @@ body.statistics-page
     font-family: Verdana, Tahoma, Arial, "Helvetica Neue", Helvetica, Sans-Serif;
     margin: 0;
     padding: 0;
-    color: #000000;
 }
 
 div.statistics-manacurve
@@ -74,12 +73,14 @@ div.statistics-picklist
 	position: absolute;
 	left: 5px;
 	top: 110px;
-	width: 250px;
+	width: 260px;
 }
 
-p.statistics-pickrow
+div.statistics-pickrow
 {
-	margin: 0em 0em 0.2em 0em;
+    padding: 0.5em 0em 0.5em 0.5em;
+    margin: 1em 0em 0px 0px;
+    width: 100%
 }
 
 p.spark-bar
@@ -547,8 +548,20 @@ a.cardcolorgold
 	color: Black;
 }
 
+/* DRAFTMEMBER
+----------------------------------------------------------*/
 
-/* define cardcolors, all will come as cardcolorX where x is the colors of the card, following the color pie (WUBRG) */
+p.latestmembers
+{
+	margin: 0em 0em 0.7em 0em;
+	font-weight: bold;
+}
+
+p.latestmember_row
+{
+	margin: 0em 0em 0.2em 0em;
+}
+
 
 /* DRAFTMEMBER
 ----------------------------------------------------------*/

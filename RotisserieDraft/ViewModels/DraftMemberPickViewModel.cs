@@ -9,13 +9,13 @@ namespace RotisserieDraft.ViewModels
     {
         public DraftMemberPickViewModel()
         {
-            Picks = new List<string>();
+            Picks = new List<PickViewModel>();
             ManaCurve = new List<int>();
             ColorPercentages = new List<string>();
         }
 
         public int NumberOfPicks { get; set; }
-        public List<string> Picks { get; set; }
+        public List<PickViewModel> Picks { get; set; }
         public List<int> ManaCurve { get; set; }
         public List<string> ColorPercentages { get; set; }
         public string ManaCurveSparkLine { get; set; }
